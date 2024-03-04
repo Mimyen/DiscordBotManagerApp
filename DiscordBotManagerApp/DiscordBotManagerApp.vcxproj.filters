@@ -1,0 +1,193 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Resource Files\Assets">
+      <UniqueIdentifier>{8ea7f162-75a8-48bc-a44a-add9c46448ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Assets\Images">
+      <UniqueIdentifier>{ac71afde-2734-45f3-a17a-6906f21a742d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Assets\Fonts">
+      <UniqueIdentifier>{783e73f0-1cdd-4f17-b437-4b86b9c1cc7a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="DiscordBotManagerApp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MainFrame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SocketHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RoundedPanel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RoundedButton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TextInput.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TextInputPanel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TextInputSHButton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Label.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RectangleObj.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LabeledTextInputPanel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ToggleButton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Image.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DropdownMenu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuPopup.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ScrollPanel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ScrollControl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ScrollButton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DiscordBotManagerApp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MainFrame.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="libs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SocketHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RoundedPanel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RoundedButton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TextInput.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TextInputPanel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TextInputSHButton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Label.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RectangleObj.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LabeledTextInputPanel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ToggleButton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DropdownMenu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuPopup.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ScrollPanel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ScrollControl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ScrollButton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="close.png">
+      <Filter>Resource Files\Assets\Images</Filter>
+    </Image>
+    <Image Include="close_clicked.png">
+      <Filter>Resource Files\Assets\Images</Filter>
+    </Image>
+    <Image Include="close_hover.png">
+      <Filter>Resource Files\Assets\Images</Filter>
+    </Image>
+    <Image Include="icon.jpeg">
+      <Filter>Resource Files\Assets\Images</Filter>
+    </Image>
+    <Image Include="maximize.png">
+      <Filter>Resource Files\Assets\Images</Filter>
+    </Image>
+    <Image Include="maximize_clicked.png">
+      <Filter>Resource Files\Assets\Images</Filter>
+    </Image>
+    <Image Include="maximize_hover.png">
+      <Filter>Resource Files\Assets\Images</Filter>
+    </Image>
+    <Image Include="minimize.png">
+      <Filter>Resource Files\Assets\Images</Filter>
+    </Image>
+    <Image Include="minimize_clicked.png">
+      <Filter>Resource Files\Assets\Images</Filter>
+    </Image>
+    <Image Include="minimize_hover.png">
+      <Filter>Resource Files\Assets\Images</Filter>
+    </Image>
+    <Image Include="hide.png">
+      <Filter>Resource Files\Assets\Images</Filter>
+    </Image>
+    <Image Include="show.png">
+      <Filter>Resource Files\Assets\Images</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="GothamLight.ttf">
+      <Filter>Resource Files\Assets\Fonts</Filter>
+    </Font>
+    <Font Include="GothamMedium.ttf">
+      <Filter>Resource Files\Assets\Fonts</Filter>
+    </Font>
+    <Font Include="GothamBold.ttf">
+      <Filter>Resource Files\Assets\Fonts</Filter>
+    </Font>
+  </ItemGroup>
+</Project>
