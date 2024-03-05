@@ -22,6 +22,9 @@
     <Filter Include="Resource Files\Assets\Fonts">
       <UniqueIdentifier>{783e73f0-1cdd-4f17-b437-4b86b9c1cc7a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Repository Files">
+      <UniqueIdentifier>{70dd4bfe-aaca-4519-9ae4-f167bb89c335}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DiscordBotManagerApp.cpp">
@@ -189,5 +192,16 @@
     <Font Include="GothamBold.ttf">
       <Filter>Resource Files\Assets\Fonts</Filter>
     </Font>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\.gitattributes">
+      <Filter>Repository Files</Filter>
+    </None>
+    <None Include="..\.gitignore">
+      <Filter>Repository Files</Filter>
+    </None>
+    <None Include="..\README.md">
+      <Filter>Repository Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

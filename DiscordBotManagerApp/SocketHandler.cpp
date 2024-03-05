@@ -1,52 +1,53 @@
 #include "SocketHandler.h"
 
-SocketHandler::SocketHandler()
-{
-}
-
-bool SocketHandler::Handle(const char message[4096])
+SocketHandler::SocketHandler(PCWSTR ip, unsigned int port)
 {
     WSADATA wsaData;
-    SOCKET clientSocket;
 
     if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
-        // std::cerr << "Failed to initialize Winsock" << std::endl;
-        return 1;
+        throw("Failed to initialize Winsock");
+        return;
     }
 
     clientSocket = socket(AF_INET, SOCK_STREAM, 0);
 
     sockaddr_in serverAddress;
     serverAddress.sin_family = AF_INET;
-    serverAddress.sin_port = htons(2222);
+    serverAddress.sin_port = htons(port);
 
-    if (InetPton(AF_INET, L"127.0.0.1", &serverAddress.sin_addr) != 1) {
-        // std::cerr << "Invalid IP address" << std::endl;
+    if (InetPton(AF_INET, ip, &serverAddress.sin_addr) != 1) {
         closesocket(clientSocket);
         WSACleanup();
-        return 1;
+        throw("Invalid IP address");
+        return;
     }
 
     if (connect(clientSocket, (struct sockaddr*)&serverAddress, sizeof(serverAddress)) != 0) {
-        // std::cerr << "Failed to connect to the server" << std::endl;
         closesocket(clientSocket);
         WSACleanup();
-        return 1;
+        throw("Failed to connect to the server");
+        return;
     }
+}
 
-    // Send the JSON message to the Python server
+SocketHandler::~SocketHandler(void)
+{
+    closesocket(clientSocket);
+    WSACleanup();
+}
+
+char* SocketHandler::Message(const char message[4096])
+{
+    // Send the message to the server
     send(clientSocket, message, strlen(message), 0);
 
-    // Receive and print the JSON response from the Python server
+    // Receive and print the response from the server
     char buffer[4096];
     int bytesReceived = recv(clientSocket, buffer, sizeof(buffer), 0);
     if (bytesReceived > 0) {
         buffer[bytesReceived] = '\0';
-        // std::cout << "Received from Python server: " << buffer << std::endl;
+        return buffer;
     }
 
-
-    closesocket(clientSocket);
-    WSACleanup();
-    return true;
+    return nullptr;
 }

@@ -14,7 +14,11 @@ enum {
 class SocketHandler
 {
 public:
-	SocketHandler();
-	bool Handle(const char message[4096]);
+	SocketHandler(PCWSTR ip, unsigned int port);
+	~SocketHandler(void);
+	char* Message(const char message[4096]);
+
+private:
+	SOCKET clientSocket;
 };
 
