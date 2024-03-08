@@ -2,7 +2,6 @@
 
 #include "libs.h"
 #include "libs/json.hpp"
-using boost::asio::ip::tcp;
 
 enum {
 	authorize = 0
@@ -20,7 +19,6 @@ public:
 	std::string Message(std::string message);
 	wxString Handle(CALL callId, std::vector<std::string> data = std::vector<std::string>());
 
-	boost::asio::io_context io_context;
 private:
 	SOCKET clientSocket;
 	PCWSTR m_ip;
