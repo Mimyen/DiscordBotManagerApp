@@ -133,6 +133,10 @@ wxString TextInput::Value() const
 void TextInput::Value(wxString value)
 {
     this->value = value;
+    if (value != "") {
+        SetForegroundColour(fg);
+        SetValue(value);
+    }
     Refresh();
 }
 

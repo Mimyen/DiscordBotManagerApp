@@ -1,6 +1,8 @@
 #pragma once
 
 #include "libs.h"
+#include "libs/json.hpp"
+using boost::asio::ip::tcp;
 
 enum {
 	authorize = 0
@@ -15,10 +17,15 @@ class SocketHandler
 {
 public:
 	SocketHandler(PCWSTR ip, unsigned int port);
-	~SocketHandler(void);
-	char* Message(const char message[4096]);
+	std::string Message(std::string message);
+	wxString Handle(CALL callId, std::vector<std::string> data = std::vector<std::string>());
 
+	boost::asio::io_context io_context;
 private:
 	SOCKET clientSocket;
+	PCWSTR m_ip;
+	unsigned int m_port;
+	std::string token;
+	std::string login;
 };
 

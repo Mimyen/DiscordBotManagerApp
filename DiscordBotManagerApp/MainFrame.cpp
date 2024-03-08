@@ -4,12 +4,31 @@
 
 void OnButtonClick(MainFrame* master)
 {
-    master->loginPanel->Hide();
-    master->mainPanel->Show();
-    master->Layout();
+    std::vector<std::string> data;
+    data.push_back(master->inputLogin->GetValue().ToStdString());
+    data.push_back(master->inputPassword->GetValue().ToStdString());
+
+    if (master->socketHandler->Handle(authorize, data) == "false") {
+        wxMessageBox("Couldn't connect to the server!");
+    }
+    else {
+        master->loginPanel->Hide();
+        master->mainPanel->Show();
+        master->Layout();
+
+        std::fstream loginData;
+        loginData.open("loginData", std::ios::out | std::ios::trunc);
+
+        if (master->leftPanelToggle->GetState()) {
+            loginData << "true\n";
+            loginData << master->inputLogin->GetValue() << '\n';
+            loginData << master->inputPassword->GetValue();
+        }
+        else loginData << "false";
+    }
 }
 
-void bOnButtonClick(bool flag) {
+void bOnButtonClick(MainFrame* master, bool flag) {
     // Perform some action when the button is clicked
     // For example, display a message box
     // wxMessageBox("Button clicked!");
@@ -21,6 +40,14 @@ void bOnButtonClick(bool flag) {
 MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
     : wxFrame(NULL, wxID_ANY, title, pos, size)
 {
+    try {
+        socketHandler = new SocketHandler(BOT_IP, BOT_PORT);
+    }
+    catch (std::exception e) {
+        wxMessageBox("Unable to connect to the server!");
+        Close();
+    }
+
     Bind(wxEVT_SIZE, &MainFrame::OnSize, this);
     oldFrameSize = GetClientSize();
 
@@ -55,6 +82,19 @@ MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
     SetSizerAndFit(mainSizer);
     //Centre();
 
+    std::fstream loginData;
+    loginData.open("loginData", std::ios::in | std::ios::out);
+
+    std::string line;
+    loginData >> line;
+
+    if (line == "true") {
+        loginData >> line;
+        inputLogin->SetValue(line);
+
+        loginData >> line;
+        inputPassword->SetValue(line);
+    }
 }
 
 void MainFrame::SetTitleBarColor(HWND hwnd, DWORD color)
@@ -101,7 +141,7 @@ void MainFrame::SetupLoginPanel()
     inputPassword->SetFont(tipFont);
     inputPassword->SetLabelFont(labelFont);
 
-    leftPanelToggle = new ToggleButton(leftPanel, wxID_ANY, wxPoint(160, 310), wxSize(40, 20), bOnButtonClick);
+    leftPanelToggle = new ToggleButton(leftPanel, wxID_ANY, wxPoint(160, 310), wxSize(40, 20), [this](bool flag = true) { bOnButtonClick(this, flag); });
 
     leftPanelRMText = new Label(leftPanel, wxID_ANY, "Remember me", wxPoint(205, 312), wxSize(110, 18));
     leftPanelRMText->SetFont(tipFont);

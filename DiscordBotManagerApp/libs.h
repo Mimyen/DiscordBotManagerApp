@@ -21,7 +21,9 @@
 #include <functional>
 #include <string>
 #include <vector>
+#include <fstream>
 #include <d2d1.h>
+#include <boost/asio.hpp>
 
 #pragma comment(lib, "dwmapi.lib")
 #pragma comment(lib, "ws2_32.lib")

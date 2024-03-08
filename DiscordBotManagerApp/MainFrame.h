@@ -12,6 +12,9 @@
 #include "ToggleButton.h"
 #include "DropdownMenu.h"
 
+#define BOT_IP L"192.168.1.11"//"192.168.0.109"
+#define BOT_PORT 2223
+
 /// <summary>
 /// This class represents entire frame of the main window.
 /// </summary>
@@ -79,7 +82,7 @@ public:
 
     wxSize oldFrameSize;
 
-    SocketHandler* socketHandler = new SocketHandler();
+    SocketHandler* socketHandler;
 
     DECLARE_EVENT_TABLE();
 };

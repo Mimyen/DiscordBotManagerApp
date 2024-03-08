@@ -106,7 +106,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(solutiondir)libs\wxWidgets-3.2.4\include;$(solutiondir)libs\wxWidgets-3.2.4\include\msvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(solutiondir)libs\wxWidgets-3.2.4\include;$(solutiondir)libs\wxWidgets-3.2.4\include\msvc;$(solutiondir)libs\boost\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -157,6 +157,7 @@
     <ClInclude Include="Label.h" />
     <ClInclude Include="LabeledTextInputPanel.h" />
     <ClInclude Include="libs.h" />
+    <ClInclude Include="libs\json.hpp" />
     <ClInclude Include="MainFrame.h" />
     <ClInclude Include="MenuPopup.h" />
     <ClInclude Include="RectangleObj.h" />
@@ -195,6 +196,7 @@
     <None Include="..\.gitattributes" />
     <None Include="..\.gitignore" />
     <None Include="..\README.md" />
+    <None Include="loginData" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
