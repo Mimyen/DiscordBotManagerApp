@@ -2,8 +2,8 @@
 
 
 
-ScrollPanel::ScrollPanel(wxWindow* parent, const wxPoint& pos, const wxSize& size)
-    : m_scrollPosition(0), m_totalContentHeight(0), m_isDragging(false), m_lastMouseY(0), m_isScrollbarHovered(false)
+ScrollPanel::ScrollPanel(wxWindow* parent, const wxPoint& pos, const wxSize& size, FunctionCallback callback)
+    : m_scrollPosition(0), m_totalContentHeight(0), m_isDragging(false), m_lastMouseY(0), m_isScrollbarHovered(false), m_callback(callback)
 {
     SetBackgroundStyle(wxBG_STYLE_PAINT);
     Create(parent, wxID_ANY, pos, size, wxTRANSPARENT);
@@ -63,13 +63,12 @@ void ScrollPanel::OnLeftUp(wxMouseEvent& event) {
         return;
     }
     if (scrollBarRect.Contains(clickPos)) {
-
-
         return;
     }
     for (auto& control : m_scrollControls) {
         if (control->HitTest(clickPos)) {
             control->OnClick();
+            if (m_callback) m_callback();
             return; // Assuming only one control can be clicked at a time
         }
     }

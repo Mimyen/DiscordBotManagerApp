@@ -5,7 +5,10 @@
 class MenuPopup : public wxPopupTransientWindow
 {
 public:
-    MenuPopup(wxWindow* parent, const wxSize& size, bool* open = nullptr, std::vector<wxString> options = std::vector<wxString>(), wxString* selectedOption = nullptr);
+    using ButtonCallback = std::function<void(wxString item)>;
+
+    MenuPopup(wxWindow* parent, const wxSize& size, bool* open = nullptr, std::vector<wxString> options = std::vector<wxString>(), 
+        wxString* selectedOption = nullptr, ButtonCallback callback = [](wxString item = "") {});
 
     // Override the OnPaint method to customize the appearance of the popup
     void OnPaint(wxPaintEvent& event);

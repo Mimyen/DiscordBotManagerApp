@@ -5,7 +5,8 @@
 
 class ScrollPanel : public wxPanel {
 public:
-    ScrollPanel(wxWindow* parent, const wxPoint& pos, const wxSize& size);
+    using FunctionCallback = std::function<void()>;
+    ScrollPanel(wxWindow* parent, const wxPoint& pos, const wxSize& size, FunctionCallback callback = []() {});
 
     template<typename T, typename... Args>
     void AddScrollControl(Args&&... args) {
@@ -37,6 +38,7 @@ private:
     wxRect scrollBarRect;
     bool m_isDragging;
     bool m_isScrollbarHovered;
+    FunctionCallback m_callback;
 
     DECLARE_EVENT_TABLE()
 };

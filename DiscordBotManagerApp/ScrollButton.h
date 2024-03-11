@@ -4,8 +4,10 @@
 
 class ScrollButton : public ScrollControl {
 public:
-    ScrollButton(wxWindow* parent, wxPoint pos, wxSize size, const wxString& label)
-        : ScrollControl(parent, pos, size), m_label(label) {}
+    using ButtonCallback = std::function<void(wxString item)>;
+
+    ScrollButton(wxWindow* parent, wxPoint pos, wxSize size, const wxString& label, ButtonCallback callback = [](wxString item = "") {})
+        : ScrollControl(parent, pos, size), m_label(label), callback(callback) {}
 
     void Draw(wxGraphicsContext* gc) override {
         wxGraphicsPath path = gc->CreatePath();
@@ -23,11 +25,13 @@ public:
     }
 
     void OnClick() override {
-        // Handle button click action here
-        wxMessageBox(m_label);
+        if (callback) {
+            callback(m_label);
+        }
     }
 
 private:
     wxString m_label;
     wxFont font = wxFont(24, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT);
+    ButtonCallback callback;
 };

@@ -17,16 +17,14 @@ void DropdownMenu::AddItem(const wxString& item)
 	m_items.push_back(item);
 }
 
-void DropdownMenu::ShowMenu()
+void DropdownMenu::Select(const wxString& item)
 {
-	m_isMenuVisible = true;
-	Refresh(); // Trigger a paint event to draw the menu
-}
-
-void DropdownMenu::HideMenu()
-{
-	m_isMenuVisible = false;
-	Refresh(); // Trigger a paint event to remove the menu	
+    for (auto& m_item : m_items) {
+        if (m_item == item) {
+            selectedOption = item;
+            Refresh();
+        }
+    }
 }
 
 void DropdownMenu::Resize(wxSize windowSize, wxSize defaultWindowSize)
@@ -68,7 +66,7 @@ void DropdownMenu::Render(wxDC& dc)
         // Draw the rounded rectangle outline on the bitmap
         gc->SetAntialiasMode(wxANTIALIAS_DEFAULT);
         
-        gc->SetBrush(wxBrush(wxColour(114, 114, 114, 255))); // Set alpha to 255 (opaque)
+        gc->SetBrush(wxBrush(wxColour(60, 60, 60, 255))); // Set alpha to 255 (opaque)
         gc->DrawRoundedRectangle(0, 0, size.x * 2, size.y * 2, size.y / 4);
         gc->SetFont(GetFont(), wxColour(255, 255, 255));
         wxDouble textWidth, textHeight, descent, externalLeading;
@@ -107,7 +105,7 @@ void DropdownMenu::OnMouseLeftDown(wxMouseEvent& event)
 {
     if (!isOpen) {
         // Create and display the custom popup window
-        MenuPopup* popup = new MenuPopup(this, GetSize(), &isOpen, m_items, &selectedOption);
+        MenuPopup* popup = new MenuPopup(this, GetSize(), &isOpen, m_items, &selectedOption, [this](wxString item) { this->Select(item); });
 
         // Position the popup below the menu
         popup->SetPosition(GetScreenPosition() + wxPoint(0, GetSize().y + 5));

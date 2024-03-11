@@ -1,6 +1,6 @@
 #include "MenuPopup.h"
 
-MenuPopup::MenuPopup(wxWindow* parent, const wxSize& size, bool* open, std::vector<wxString> options, wxString* selectedOption)
+MenuPopup::MenuPopup(wxWindow* parent, const wxSize& size, bool* open, std::vector<wxString> options, wxString* selectedOption, ButtonCallback callback)
     : m_size(size), isOpen(open)
 {
     // Set background style to transparent
@@ -14,10 +14,18 @@ MenuPopup::MenuPopup(wxWindow* parent, const wxSize& size, bool* open, std::vect
     // Set up any additional initialization here
     SetSize(m_size.x, m_size.y * (options.size() < 3 ? options.size() : 3));
 
-    ScrollPanel* scrollPanel = new ScrollPanel(this, wxPoint(0, 0), wxSize(m_size.x, m_size.y * (options.size() < 3 ? options.size() : 3)));
+    ScrollPanel* scrollPanel = new ScrollPanel(
+        this, 
+        wxPoint(0, 0), 
+        wxSize(m_size.x, m_size.y * (options.size() < 3 ? options.size() : 3)), 
+        [this]() { 
+            this->Dismiss(); 
+            this->OnDismiss(); 
+        }
+    );
 
     for (auto& option : options) {
-        scrollPanel->AddScrollControl<ScrollButton>(wxPoint(0, 0), wxSize(m_size.x, m_size.y), option);
+        scrollPanel->AddScrollControl<ScrollButton>(wxPoint(0, 0), wxSize(m_size.x, m_size.y), option, callback);
     }
 }
 

@@ -7,7 +7,7 @@ class ScrollControl
 public:
     ScrollControl(wxWindow* parent, wxPoint pos, wxSize size)
         : m_parent(parent), m_position(pos), m_size(size), 
-        defaultColour(wxColour(114, 114, 114)), hoverColour(wxColour(60, 60, 60)), m_isHovered(false) {}
+        defaultColour(wxColour(60, 60, 60)), hoverColour(wxColour(90, 90, 90)), m_isHovered(false) {}
 
     virtual ~ScrollControl() {}
 
