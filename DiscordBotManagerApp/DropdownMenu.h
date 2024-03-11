@@ -30,5 +30,6 @@ protected:
 
 	wxSize defaultSize;
 	wxPoint defaultPos;
+	wxString selectedOption;
 };
 

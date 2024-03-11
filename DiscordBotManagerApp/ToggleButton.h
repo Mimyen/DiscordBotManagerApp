@@ -39,6 +39,8 @@ public:
     /// <returns>State of the button.</returns>
     virtual bool GetState() const;
 
+    virtual void SetState(const bool& state);
+
 protected:
     /// <summary>
     /// Repaints the window.

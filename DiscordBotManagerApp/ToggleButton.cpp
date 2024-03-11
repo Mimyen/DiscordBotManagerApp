@@ -41,6 +41,13 @@ bool ToggleButton::GetState() const
     return m_isToggled;
 }
 
+void ToggleButton::SetState(const bool& state)
+{
+    if (m_isToggled == state) return;
+    m_isToggled = state;
+    Refresh();
+}
+
 void ToggleButton::OnPaint(wxPaintEvent& event)
 {
     wxAutoBufferedPaintDC dc(this);

@@ -63,6 +63,7 @@ void MenuPopup::OnDismiss()
     Close();
 
     if (isOpen && !wxRect(GetParent()->GetScreenPosition(), GetParent()->GetSize()).Contains(wxGetMousePosition())) *isOpen = false;
+    GetParent()->Refresh();
 }
 
 void MenuPopup::OnMouseEvents(wxMouseEvent& event)

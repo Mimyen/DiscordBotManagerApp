@@ -2,10 +2,11 @@
 
 DropdownMenu::DropdownMenu(wxWindow* parent, wxWindowID id, wxPoint pos, wxSize size)
 	: wxPanel(parent, id, pos, size, wxTRANSPARENT_WINDOW), m_isMenuVisible(false),
-    defaultPos(pos), defaultSize(size), isOpen(false)
+    defaultPos(pos), defaultSize(size), isOpen(false), selectedOption("")
 {
     SetBackgroundStyle(wxBG_STYLE_PAINT);
     SetBackgroundColour(wxColour(18, 18, 18, 0));
+    SetFont(wxFont(24, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT));
 
     Bind(wxEVT_PAINT, &DropdownMenu::OnPaint, this);
     Bind(wxEVT_LEFT_DOWN, &DropdownMenu::OnMouseLeftDown, this);
@@ -69,6 +70,21 @@ void DropdownMenu::Render(wxDC& dc)
         
         gc->SetBrush(wxBrush(wxColour(114, 114, 114, 255))); // Set alpha to 255 (opaque)
         gc->DrawRoundedRectangle(0, 0, size.x * 2, size.y * 2, size.y / 4);
+        gc->SetFont(GetFont(), wxColour(255, 255, 255));
+        wxDouble textWidth, textHeight, descent, externalLeading;
+        gc->GetTextExtent(selectedOption.size() > 0 ? selectedOption : wxString("Select Option"), &textWidth, &textHeight, &descent, &externalLeading); // Measure text
+
+        wxDouble xPos = (size.x * 2 - textWidth) / 2; // Center horizontally
+        wxDouble yPos = (size.y * 2 - textHeight) / 2; // Center vertically
+
+        gc->DrawText(selectedOption.size() > 0 ? selectedOption : wxString("Select Option"), xPos, yPos); // Draw centered text
+
+        gc->GetTextExtent(this->isOpen ? wxString("-") : wxString("+"), &textWidth, &textHeight, &descent, &externalLeading); // Measure text
+
+        xPos = size.x * 2 - (size.y * 2 - textHeight) / 2; // Center horizontally
+        yPos = (size.y * 2 - textHeight) / 2; // Center vertically
+
+        gc->DrawText(this->isOpen ? wxString("-") : wxString("+"), xPos, yPos); // Draw centered text
 
 
         delete gc;
@@ -91,7 +107,7 @@ void DropdownMenu::OnMouseLeftDown(wxMouseEvent& event)
 {
     if (!isOpen) {
         // Create and display the custom popup window
-        MenuPopup* popup = new MenuPopup(this, GetSize(), &isOpen, m_items);
+        MenuPopup* popup = new MenuPopup(this, GetSize(), &isOpen, m_items, &selectedOption);
 
         // Position the popup below the menu
         popup->SetPosition(GetScreenPosition() + wxPoint(0, GetSize().y + 5));
@@ -100,6 +116,7 @@ void DropdownMenu::OnMouseLeftDown(wxMouseEvent& event)
         popup->Popup();
 
         isOpen = true;
+        Refresh();
     }
     else isOpen = false;
 }

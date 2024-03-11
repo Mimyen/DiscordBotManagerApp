@@ -12,7 +12,7 @@
 #include "ToggleButton.h"
 #include "DropdownMenu.h"
 
-#define BOT_IP L"192.168.1.11"//"192.168.0.109"
+#define BOT_IP L"192.168.1.11"
 #define BOT_PORT 2223
 
 /// <summary>

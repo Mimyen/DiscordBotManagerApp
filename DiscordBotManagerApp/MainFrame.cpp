@@ -94,6 +94,8 @@ MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
 
         loginData >> line;
         inputPassword->SetValue(line);
+
+        leftPanelToggle->SetState(true);
     }
 }
 
