@@ -23,6 +23,7 @@
 #include <vector>
 #include <fstream>
 #include <d2d1.h>
+#include <cmath>
 
 #pragma comment(lib, "dwmapi.lib")
 #pragma comment(lib, "ws2_32.lib")

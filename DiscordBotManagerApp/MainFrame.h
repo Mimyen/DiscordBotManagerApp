@@ -11,6 +11,7 @@
 #include "Image.h"
 #include "ToggleButton.h"
 #include "DropdownMenu.h"
+#include "Slider.h"
 
 #define BOT_IP L"127.0.0.1"
 #define BOT_PORT 2223
@@ -79,6 +80,7 @@ public:
     Label* leftPanelRMText;
 
     DropdownMenu* menu;
+    Slider* slider;
 
     wxSize oldFrameSize;
 

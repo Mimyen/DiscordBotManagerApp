@@ -9,6 +9,7 @@
 class DropdownMenu : public wxPanel
 {
 public:
+	using FunctionCallback = std::function<void(wxString option)>;
 	/// <summary>
 	/// Contructor for DropdownMenu class.
 	/// </summary>
@@ -16,7 +17,7 @@ public:
 	/// <param name="id">Id of the object, useable for making calls.</param>
 	/// <param name="pos">Position where Image will be drawn.</param>
 	/// <param name="size">Size of the Image.</param>
-	DropdownMenu(wxWindow* parent, wxWindowID id = wxID_ANY, wxPoint pos = wxDefaultPosition, wxSize size = wxDefaultSize);
+	DropdownMenu(wxWindow* parent, wxWindowID id = wxID_ANY, wxPoint pos = wxDefaultPosition, wxSize size = wxDefaultSize, FunctionCallback callback = [](wxString option = "") {});
 
 	/// <summary>
 	/// Adds item to menu.
@@ -24,6 +25,13 @@ public:
 	/// <param name="item">wxString representing the chosen item from the menu</param>
 	/// <returns></returns>
 	virtual void AddItem(const wxString& item);
+
+	/// <summary>
+	/// Sets items.
+	/// </summary>
+	/// <param name="item">wxString representing the chosen item from the menu</param>
+	/// <returns></returns>
+	virtual void SetItems(const std::vector<wxString>& items);
 
 	/// <summary>
 	/// Select item from menu.
@@ -61,6 +69,7 @@ protected:
 	/// <param name="event">Event passed to the function.</param>
 	virtual void OnMouseLeftDown(wxMouseEvent& event);
 
+	FunctionCallback m_callback;
 	std::vector<wxString> m_items;
 	bool m_isMenuVisible;
 

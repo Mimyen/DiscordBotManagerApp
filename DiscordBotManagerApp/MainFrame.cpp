@@ -181,13 +181,14 @@ void MainFrame::SetupMainPanel()
     RoundedPanel* panel = new RoundedPanel(mainPanel, wxID_ANY, wxColour(18, 18, 18), wxColour(0, 0, 0), 0, 0, 0, 0);
     wxBoxSizer* mainPanelSizer = new wxBoxSizer(wxHORIZONTAL);
     mainPanelSizer->Add(panel, 1, wxEXPAND | wxALL, 0);
-    menu = new DropdownMenu(panel, wxID_ANY, wxPoint(50, 50), wxSize(200, 50));
+    menu = new DropdownMenu(panel, wxID_ANY, wxPoint(50, 50), wxSize(200, 50), [this](wxString option) { wxLogDebug(option); });
     menu->AddItem("Item 1");
     menu->AddItem("Item 2");
     menu->AddItem("Item 3");
     menu->AddItem("Item 4");
     menu->AddItem("Item 5");
 
+    slider = new Slider(panel, wxID_ANY, wxPoint(350, 50), wxSize(100, 15), [this]() {});
 
     mainPanel->SetSizer(mainPanelSizer);
 }

@@ -1,8 +1,8 @@
 #include "DropdownMenu.h"
 
-DropdownMenu::DropdownMenu(wxWindow* parent, wxWindowID id, wxPoint pos, wxSize size)
+DropdownMenu::DropdownMenu(wxWindow* parent, wxWindowID id, wxPoint pos, wxSize size, FunctionCallback callback)
 	: wxPanel(parent, id, pos, size, wxTRANSPARENT_WINDOW), m_isMenuVisible(false),
-    defaultPos(pos), defaultSize(size), isOpen(false), selectedOption("")
+    defaultPos(pos), defaultSize(size), isOpen(false), selectedOption(""), m_callback(callback)
 {
     SetBackgroundStyle(wxBG_STYLE_PAINT);
     SetBackgroundColour(wxColour(18, 18, 18, 0));
@@ -15,6 +15,12 @@ DropdownMenu::DropdownMenu(wxWindow* parent, wxWindowID id, wxPoint pos, wxSize 
 void DropdownMenu::AddItem(const wxString& item)
 {
 	m_items.push_back(item);
+}
+
+void DropdownMenu::SetItems(const std::vector<wxString>& items)
+{
+    m_items = items;
+    Refresh();
 }
 
 void DropdownMenu::Select(const wxString& item)
@@ -30,13 +36,13 @@ void DropdownMenu::Select(const wxString& item)
 void DropdownMenu::Resize(wxSize windowSize, wxSize defaultWindowSize)
 {
     // Calculate new size of the element
-    int labelX = defaultSize.x * windowSize.x / defaultWindowSize.x;
-    int labelY = defaultSize.y * windowSize.y / defaultWindowSize.y;
-    int labelWidth = defaultPos.x * windowSize.x / defaultWindowSize.x;
-    int labelHeight = defaultPos.y * windowSize.y / defaultWindowSize.y;
+    int menuX = defaultSize.x * windowSize.x / defaultWindowSize.x;
+    int menuY = defaultSize.y * windowSize.y / defaultWindowSize.y;
+    int menuWidth = defaultPos.x * windowSize.x / defaultWindowSize.x;
+    int menuHeight = defaultPos.y * windowSize.y / defaultWindowSize.y;
 
-    // Set the new position and size for the label
-    SetSize(labelWidth, labelHeight, labelX, labelY);
+    // Set the new position and size for the menu
+    SetSize(menuWidth, menuHeight, menuX, menuY);
 
     Refresh();
 }
@@ -105,7 +111,18 @@ void DropdownMenu::OnMouseLeftDown(wxMouseEvent& event)
 {
     if (!isOpen) {
         // Create and display the custom popup window
-        MenuPopup* popup = new MenuPopup(this, GetSize(), &isOpen, m_items, &selectedOption, [this](wxString item) { this->Select(item); });
+        MenuPopup* popup = new MenuPopup(
+            this, 
+            GetSize(), 
+            &isOpen, 
+            m_items, 
+            &selectedOption, 
+            [this](wxString item) { 
+                this->Select(item); 
+                if (this->m_callback) 
+                    this->m_callback(this->selectedOption); 
+            }
+        );
 
         // Position the popup below the menu
         popup->SetPosition(GetScreenPosition() + wxPoint(0, GetSize().y + 5));
