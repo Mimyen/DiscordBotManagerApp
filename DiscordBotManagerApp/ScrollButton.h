@@ -1,34 +1,35 @@
 #pragma once
 #include "ScrollControl.h"
 
-
+/// <summary>
+/// Inner class of ScrollPanel. Draws button-like object.
+/// </summary>
 class ScrollButton : public ScrollControl {
 public:
     using ButtonCallback = std::function<void(wxString item)>;
 
+    /// <summary>
+    /// Contructor for ScrollButton class.
+    /// </summary>
+    /// <param name="parent">Pointer to cointainer that Image class will be in.</param>
+    /// <param name="pos">Position where Image will be drawn.</param>
+    /// <param name="size">Size of the popup.</param>
+    /// <param name="label">Name of the button.</param>
+    /// <param name="callback">Function run on press.</param>
     ScrollButton(wxWindow* parent, wxPoint pos, wxSize size, const wxString& label, ButtonCallback callback = [](wxString item = "") {})
         : ScrollControl(parent, pos, size), m_label(label), callback(callback) {}
 
-    void Draw(wxGraphicsContext* gc) override {
-        wxGraphicsPath path = gc->CreatePath();
-        path.AddRectangle(m_position.x * 2, m_position.y * 2, m_size.x * 2, m_size.y * 2); // Corner radius
-        gc->SetBrush(wxBrush(m_isHovered ? hoverColour : defaultColour)); // Button color
-        gc->FillPath(path);
-        gc->SetFont(font, wxColour(255, 255, 255));
-        wxDouble textWidth, textHeight, descent, externalLeading;
-        gc->GetTextExtent(m_label, &textWidth, &textHeight, &descent, &externalLeading); // Measure text
+    /// <summary>
+    /// Repaints the button.
+    /// </summary>
+    /// <param name="gc">wxGraphicsContext provided by the parent.</param>
+    void Draw(wxGraphicsContext* gc) override;
 
-        wxDouble xPos = m_position.x * 2 + (m_size.x * 2 - textWidth) / 2; // Center horizontally
-        wxDouble yPos = m_position.y * 2 + (m_size.y * 2 - textHeight) / 2; // Center vertically
-
-        gc->DrawText(m_label, xPos, yPos); // Draw centered text
-    }
-
-    void OnClick() override {
-        if (callback) {
-            callback(m_label);
-        }
-    }
+    /// <summary>
+    /// Function that is run whenever button is clicked.
+    /// (Though you need to add event functionality yourself)
+    /// </summary>
+    void OnClick() override;
 
 private:
     wxString m_label;

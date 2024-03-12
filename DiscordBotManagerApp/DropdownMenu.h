@@ -3,9 +3,19 @@
 #include "Utils.h"
 #include "MenuPopup.h"
 
+/// <summary>
+/// Class that creates dropdown menus.
+/// </summary>
 class DropdownMenu : public wxPanel
 {
 public:
+	/// <summary>
+	/// Contructor for DropdownMenu class.
+	/// </summary>
+	/// <param name="parent">Pointer to cointainer that Image class will be in.</param>
+	/// <param name="id">Id of the object, useable for making calls.</param>
+	/// <param name="pos">Position where Image will be drawn.</param>
+	/// <param name="size">Size of the Image.</param>
 	DropdownMenu(wxWindow* parent, wxWindowID id = wxID_ANY, wxPoint pos = wxDefaultPosition, wxSize size = wxDefaultSize);
 
 	/// <summary>
