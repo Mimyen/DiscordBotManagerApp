@@ -1,9 +1,9 @@
 #include "RoundedScrollPanel.h"
 
-
-
-RoundedScrollPanel::RoundedScrollPanel(wxWindow* parent, const wxPoint& pos, const wxSize& size, FunctionCallback callback)
-    : m_scrollPosition(0), m_totalContentHeight(0), m_isDragging(false), m_lastMouseY(0), m_isScrollbarHovered(false), m_callback(callback)
+RoundedScrollPanel::RoundedScrollPanel(wxWindow* parent, const wxPoint& pos, const wxSize& size)
+    : m_scrollPosition(0), m_totalContentHeight(0), m_isDragging(false), m_lastMouseY(0), 
+    m_isScrollbarHovered(false), bg(wxColour(0, 0, 0)), fg(wxColour(18, 18, 18)),
+    defaultPos(pos), defaultSize(size)
 {
     SetBackgroundStyle(wxBG_STYLE_PAINT);
     Create(parent, wxID_ANY, pos, size, wxTRANSPARENT);
@@ -27,24 +27,34 @@ void RoundedScrollPanel::OnSize(wxSizeEvent& event) {
 }
 
 void RoundedScrollPanel::RecalculateLayout() {
-    int yPos = 0; // Start from the very top
 
     // Use the full width of the RoundedScrollPanel for each control
     int controlWidth = GetClientSize().x;
+    int yPos = controlWidth / 8; // Start from the very top
 
     for (auto& control : m_scrollControls) {
         // Update each control's position and size to fill the panel horizontally
-        control->SetPosition(wxPoint(0, yPos - m_scrollPosition));
-        control->SetSize(wxSize(controlWidth, controlWidth));
+        control->SetPosition(wxPoint(controlWidth / 8, yPos - m_scrollPosition));
+        control->SetSize(wxSize(std::round((double)controlWidth * 3.0 / 4.0), std::round((double)controlWidth * 3.0 / 4.0)));
 
         // Move yPos for the next control, placing it directly below the previous one without a gap
-        yPos += control->GetSize().y;
+        yPos += control->GetSize().y + controlWidth / 8;
     }
 
     // Adjust the total content height based on the final yPos
     m_totalContentHeight = yPos;
 
     Refresh(); // Redraw to apply layout changes
+}
+
+void RoundedScrollPanel::UnselectAll()
+{
+    for (auto& control : m_scrollControls) {
+        if (control->GetSelected()) {
+            control->SetSelected(false);
+            control->Refresh();
+        }
+    }
 }
 
 void RoundedScrollPanel::OnLeftUp(wxMouseEvent& event) {
@@ -77,61 +87,33 @@ void RoundedScrollPanel::OnPaint(wxPaintEvent& event) {
 
 void RoundedScrollPanel::Render(wxDC& dc)
 {
-    // Create a rounded rectangle bitmap and then a region from it
-    wxRegion roundedRectRegion = Utils::GetRoundedRegion(dc, GetClientSize(), 15); // Threshold near black to treat as transparent
-
-    // Create a memory DC with the same properties as the paint DC
-    wxMemoryDC memDC;
-
-    // Get size of the element
     wxSize size = GetClientSize();
 
     // Create a bitmap with higher resolution for antialiasing
-    wxBitmap bmp = Utils::CreateEmptyBitmap(size);
-
-    // Select the bitmap into the memory DC
+    wxBitmap bmp(size * 2);
+    wxMemoryDC memDC;
     memDC.SelectObject(bmp);
+
+    // Set the background color
+    memDC.SetBackground(wxBrush(bg));
+    memDC.Clear();
 
     wxGraphicsContext* gc = wxGraphicsContext::Create(memDC);
     if (gc) {
-        gc->Clip(roundedRectRegion);
-
-        // Set blending mode for transparency
-        gc->SetCompositionMode(wxCOMPOSITION_OVER);
-
-        // Draw the rounded rectangle outline on the bitmap
+        // Draw the rounded rectangle on the bitmap
         gc->SetAntialiasMode(wxANTIALIAS_DEFAULT);
-        gc->SetBrush(wxBrush(wxColour(114, 114, 114, 255))); // Set alpha to 255 (opaque)
 
-        // After the loop for drawing controls
-        if (m_totalContentHeight > GetClientSize().y) { // Check if the scrollbar is needed
-
-            int visibleHeight = GetClientSize().y - 4; // 2px offset from both top and bottom
-            scrollBarRect.height = visibleHeight * visibleHeight / m_totalContentHeight;
-            scrollBarRect.y = 2 + (m_scrollPosition * (visibleHeight - scrollBarRect.height) / (m_totalContentHeight - GetClientSize().y));
-
-            // Determine the scrollbar color based on its state
-            wxColour scrollbarColor(255, 255, 255); // White color
-
-            // Create a graphics context for drawing
-            gc->SetBrush(wxBrush(wxColour(scrollbarColor.Red(), scrollbarColor.Green(), scrollbarColor.Blue(), m_isDragging ? 220 : (m_isScrollbarHovered ? 180 : 128))));
-            gc->SetPen(*wxTRANSPARENT_PEN);
-            gc->DrawRectangle(scrollBarRect.x * 2, scrollBarRect.y * 2, scrollBarRect.width * 2, scrollBarRect.height * 2);
-        }
+        gc->SetBrush(wxBrush(fg));
+        gc->DrawRoundedRectangle(0, 0, size.x * 2, size.y * 2, 24);
 
         delete gc;
     }
 
-    // Rescale bitmap for better quality
+    // Scale down the bitmap to the original size for antialiasing effect
     wxImage img = bmp.ConvertToImage().Rescale(size.x, size.y, wxIMAGE_QUALITY_HIGH);
     wxBitmap finalBmp(img);
 
     // Draw the bitmap on the device context
-  /*
-  * Better quality but laggy
-  * roundedRectRegion = Utils::GetRoundedRegion(dc, GetClientSize() / 2, 10, 8);
-  * dc.SetDeviceClippingRegion(roundedRectRegion);
-  */
     dc.DrawBitmap(finalBmp, 0, 0, true);
 }
 
@@ -192,6 +174,22 @@ void RoundedScrollPanel::OnMouseMove(wxMouseEvent& event) {
     }
 
     if (shouldRefresh) Refresh();
+}
+
+void RoundedScrollPanel::Resize(wxSize windowSize, wxSize defaultWindowSize)
+{
+    // Calculate new size of the element
+    int objectX = defaultSize.x * windowSize.x / defaultWindowSize.x;
+    int objectY = defaultSize.y * windowSize.y / defaultWindowSize.y;
+    int objectWidth = defaultPos.x * windowSize.x / defaultWindowSize.x;
+    int objectHeight = defaultPos.y * windowSize.y / defaultWindowSize.y;
+
+    // Set the new position and size for the object
+    SetSize(objectWidth, objectHeight, objectX, objectY);
+
+    RecalculateLayout();
+
+    Refresh();
 }
 
 BEGIN_EVENT_TABLE(RoundedScrollPanel, wxPanel)

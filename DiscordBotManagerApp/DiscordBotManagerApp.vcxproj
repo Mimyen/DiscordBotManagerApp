@@ -180,6 +180,7 @@
     <ClInclude Include="Utils.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="assets\icon\home.png" />
     <Image Include="close.png" />
     <Image Include="close_clicked.png" />
     <Image Include="close_hover.png" />

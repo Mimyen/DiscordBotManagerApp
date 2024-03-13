@@ -12,6 +12,7 @@
 #include "ToggleButton.h"
 #include "DropdownMenu.h"
 #include "Slider.h"
+#include "RoundedScrollPanel.h"
 
 #define BOT_IP L"127.0.0.1"
 #define BOT_PORT 2222
@@ -59,16 +60,22 @@ private:
 
 
 public:
+    wxSize oldFrameSize;
+    SocketHandler* socketHandler;
+
+    // Main panels
     wxPanel* loginPanel;
     wxPanel* mainPanel;
 
     wxBoxSizer* mainSizer;
 
+    // loginPanel -> rightPanel
     wxPanel* rightPanel;
     Label* rightLabel;
     Label* rightLowerLabel;
     Image* rightLabelImage;
 
+    // loginPanel -> leftPanel
     RoundedPanel* leftPanel;
     Label* leftPanelHeader;
     RoundedButton* button;
@@ -79,12 +86,11 @@ public:
     ToggleButton* leftPanelToggle;
     Label* leftPanelRMText;
 
-    DropdownMenu* menu;
-    Slider* slider;
+    // mainPanel
+    RoundedScrollPanel* mainPanelHome;
+    RoundedScrollPanel* mainPanelFunctions;
 
-    wxSize oldFrameSize;
 
-    SocketHandler* socketHandler;
 
     DECLARE_EVENT_TABLE();
 };

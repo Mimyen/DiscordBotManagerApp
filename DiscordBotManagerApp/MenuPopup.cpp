@@ -9,8 +9,6 @@ MenuPopup::MenuPopup(wxWindow* parent, const wxSize& size, bool* open, std::vect
     // Construct object
     Create(parent, wxTRANSPARENT);
 
-
-
     // Set up any additional initialization here
     SetSize(m_size.x, m_size.y * (options.size() < 3 ? options.size() : 3));
 

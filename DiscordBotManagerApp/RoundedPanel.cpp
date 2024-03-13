@@ -53,7 +53,7 @@ void RoundedPanel::Render(wxDC& dc)
     dc.SetPen(*wxTRANSPARENT_PEN);
 
     // Draw rounded rectangle
-    dc.DrawRoundedRectangle(offsetXT, offsetYT, size.x - offsetXB, size.y - offsetYB, radius);
+    dc.DrawRoundedRectangle(offsetXT, offsetYT, size.x - offsetXB, size.y - offsetYB - offsetYT, radius);
 }
 
 void RoundedPanel::OnSize(wxSizeEvent& event)

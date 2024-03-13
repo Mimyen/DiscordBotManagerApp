@@ -1,14 +1,13 @@
 #pragma once
 
 #include "Utils.h"
+#include "RoundedItem.h"
 
 /// <summary>
 /// Simple Panel with scroll functionalities.
 /// </summary>
 class RoundedScrollPanel : public wxPanel {
 public:
-    using FunctionCallback = std::function<void()>;
-
     /// <summary>
     /// Contructor for ScrollPanel class.
     /// </summary>
@@ -16,14 +15,14 @@ public:
     /// <param name="pos">Position where Image will be drawn.</param>
     /// <param name="size">Size of the popup.</param>
     /// <param name="callback">Callback to a function</param>
-    RoundedScrollPanel(wxWindow* parent, const wxPoint& pos, const wxSize& size, FunctionCallback callback = []() {});
+    RoundedScrollPanel(wxWindow* parent, const wxPoint& pos, const wxSize& size);
 
     /// <summary>
     /// Adds control to the panel. Need to specify class and arguments of the control.
     /// </summary>
     /// <param name="args">arguments needed to create object of desired class.</param>
     template<typename T, typename... Args>
-    void AddScrollControl(Args&&... args) {
+    void AddControl(Args&&... args) {
         m_scrollControls.emplace_back(std::make_unique<T>(this, std::forward<Args>(args)...));
         RecalculateLayout();
     }
@@ -32,6 +31,15 @@ public:
     /// Recalculates layout of the panel.
     /// </summary>
     void RecalculateLayout();
+
+    /// <summary>
+    /// Resizes the window in relation to window size.
+    /// </summary>
+    /// <param name="windowSize">Current window size.</param>
+    /// <param name="defaultWindowSize">Size of the window that it is created with.</param>
+    virtual void Resize(wxSize windowSize, wxSize defaultWindowSize);
+
+    void UnselectAll();
 
 protected:
     /// <summary>
@@ -106,14 +114,17 @@ protected:
     void SetFocus();
 
 private:
-    std::vector<std::unique_ptr<wxPanel>> m_scrollControls;
+    std::vector<std::unique_ptr<RoundedItem>> m_scrollControls;
     int m_scrollPosition; // Current scroll position
     int m_totalContentHeight; // Total content height
     int m_lastMouseY;
     wxRect scrollBarRect;
     bool m_isDragging;
     bool m_isScrollbarHovered;
-    FunctionCallback m_callback;
+    wxColour bg;
+    wxColour fg;
+    wxSize defaultSize;
+    wxPoint defaultPos;
 
     DECLARE_EVENT_TABLE()
 };

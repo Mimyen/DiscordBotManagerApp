@@ -12,7 +12,7 @@ MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
     }
 
     Bind(wxEVT_SIZE, &MainFrame::OnSize, this);
-    oldFrameSize = GetClientSize();
+    oldFrameSize = size;
 
     // Loading fonts
     light.AddPrivateFont("assets\\fonts\\gotham\\Light.ttf");
@@ -72,7 +72,7 @@ void MainFrame::SetupLoginPanel()
 {
     // Split the login panel into two halves
     rightPanel = new wxPanel(loginPanel, wxID_ANY);
-    leftPanel = new RoundedPanel(loginPanel, wxID_ANY, 10, 0, 10, 10); // Use RoundedPanel instead of wxPanel
+    leftPanel = new RoundedPanel(loginPanel, wxID_ANY, 20, 5, 20, 20); // Use RoundedPanel instead of wxPanel
 
     // Setting up fonts
     wxFont tipFont = light;
@@ -88,7 +88,7 @@ void MainFrame::SetupLoginPanel()
     labelFont.SetPointSize(12);
 
     // Left Panel
-    leftPanelHeader = new Label(leftPanel, wxID_ANY, "Log in to Manager", wxPoint(10, 50), wxSize(600, 100), wxALIGN_CENTER_HORIZONTAL);
+    leftPanelHeader = new Label(leftPanel, wxID_ANY, "Log in to Manager", wxPoint(25, 50), wxSize(600, 100), wxALIGN_CENTER_HORIZONTAL);
     leftPanelHeader->SetBackgroundColour(wxColour(18, 18, 18));
     leftPanelHeader->SetForegroundColour(wxColour(255, 255, 255));
     leftPanelHeader->SetFont(headerFont);
@@ -96,7 +96,7 @@ void MainFrame::SetupLoginPanel()
     button = new RoundedButton(
         leftPanel, 
         "Log In", 
-        wxPoint(160, 380), 
+        wxPoint(175, 380), 
         wxSize(300, 50),
         [this]() { 
             std::vector<std::string> data;
@@ -126,24 +126,24 @@ void MainFrame::SetupLoginPanel()
 
     button->SetFont(tipFont);
 
-    inputLogin = new LabeledTextInputPanel(leftPanel, wxID_ANY, "Username", wxPoint(160, 190), wxSize(300, 50), wxTE_PROCESS_ENTER, wxDefaultValidator, "name", button);
+    inputLogin = new LabeledTextInputPanel(leftPanel, wxID_ANY, "Username", wxPoint(175, 190), wxSize(300, 50), wxTE_PROCESS_ENTER, wxDefaultValidator, "name", button);
     inputLogin->SetFont(tipFont);
     inputLogin->SetLabelFont(labelFont);
 
-    inputPassword = new LabeledTextInputPanel(leftPanel, wxID_ANY, "Password", wxPoint(160, 250), wxSize(300, 50), wxTE_PROCESS_ENTER, wxDefaultValidator, "name", button);
+    inputPassword = new LabeledTextInputPanel(leftPanel, wxID_ANY, "Password", wxPoint(175, 250), wxSize(300, 50), wxTE_PROCESS_ENTER, wxDefaultValidator, "name", button);
     inputPassword->SetEncrypted(true);
     inputPassword->SetFont(tipFont);
     inputPassword->SetLabelFont(labelFont);
 
-    leftPanelToggle = new ToggleButton(leftPanel, wxID_ANY, wxPoint(160, 310), wxSize(40, 20), [this](bool flag = true) {  });
+    leftPanelToggle = new ToggleButton(leftPanel, wxID_ANY, wxPoint(175, 310), wxSize(40, 20), [this](bool flag = true) {  });
 
-    leftPanelRMText = new Label(leftPanel, wxID_ANY, "Remember me", wxPoint(205, 312), wxSize(110, 18));
+    leftPanelRMText = new Label(leftPanel, wxID_ANY, "Remember me", wxPoint(220, 312), wxSize(110, 18));
     leftPanelRMText->SetFont(tipFont);
     leftPanelRMText->SetBackgroundColour(wxColour(18, 18, 18));
     leftPanelRMText->SetForegroundColour(wxColour(255, 255, 255));
 
-    leftPanelLine1 = new RectangleObj(leftPanel, wxID_ANY, wxPoint(100, 150), wxSize(420, 1));
-    leftPanelLine2 = new RectangleObj(leftPanel, wxID_ANY, wxPoint(100, 480), wxSize(420, 1));
+    leftPanelLine1 = new RectangleObj(leftPanel, wxID_ANY, wxPoint(115, 150), wxSize(420, 1));
+    leftPanelLine2 = new RectangleObj(leftPanel, wxID_ANY, wxPoint(115, 480), wxSize(420, 1));
 
     // Right Panel
     rightLabel = new Label(rightPanel, wxID_ANY, "Welcome to Mimyen Bot Manager", wxPoint(160, 460), wxSize(300, 20), wxALIGN_CENTER_HORIZONTAL);
@@ -159,7 +159,7 @@ void MainFrame::SetupLoginPanel()
 
     // Create a horizontal box sizer to contain the left and right panels
     wxBoxSizer* loginPanelSizer = new wxBoxSizer(wxHORIZONTAL);
-    loginPanelSizer->Add(leftPanel, 1, wxEXPAND | wxALL, 10); // Add left panel with proportion 1 and 10px spacing
+    loginPanelSizer->Add(leftPanel, 1, wxEXPAND | wxALL, 0); // Add left panel with proportion 1 and 10px spacing
     loginPanelSizer->Add(rightPanel, 1, wxEXPAND | wxALL, 0); // Add right panel with proportion 1
 
     // Set the login panel's sizer
@@ -169,25 +169,46 @@ void MainFrame::SetupLoginPanel()
 void MainFrame::SetupMainPanel()
 {
     mainPanel->SetBackgroundColour(wxColour(0, 0, 0));
-    
-    RoundedPanel* panel = new RoundedPanel(mainPanel, wxID_ANY, 0, 0, 0, 0);
-    wxBoxSizer* mainPanelSizer = new wxBoxSizer(wxHORIZONTAL);
-    mainPanelSizer->Add(panel, 1, wxEXPAND | wxALL, 0);
-    menu = new DropdownMenu(panel, wxID_ANY, wxPoint(50, 50), wxSize(200, 50), [this](wxString option) { wxLogDebug(option); });
-    menu->AddItem("Item 1");
-    menu->AddItem("Item 2");
-    menu->AddItem("Item 3");
-    menu->AddItem("Item 4");
-    menu->AddItem("Item 5");
+    mainPanelHome = new RoundedScrollPanel(
+        mainPanel, 
+        wxPoint(8, 0), 
+        wxSize(64, 64)
+    );
 
-    slider = new Slider(panel, wxID_ANY, wxPoint(350, 50), wxSize(100, 15), [this](double value) { LDC(value); });
+    mainPanelHome->AddControl<RoundedItem>(
+        wxID_ANY, 
+        wxDefaultPosition, 
+        wxDefaultSize, 
+        [this]() {
+            mainPanelHome->UnselectAll();
+            mainPanelFunctions->UnselectAll();
+        },
+        true,
+        "assets\\icon\\home.png"
+    );
 
-    mainPanel->SetSizer(mainPanelSizer);
+    mainPanelFunctions = new RoundedScrollPanel(
+        mainPanel,
+        wxPoint(8, 72),
+        wxSize(64, 592)
+    );
+
+    mainPanelFunctions->AddControl<RoundedItem>(
+        wxID_ANY,
+        wxDefaultPosition,
+        wxDefaultSize,
+        [this]() {
+            mainPanelHome->UnselectAll();
+            mainPanelFunctions->UnselectAll();
+        },
+        true,
+        "assets\\icon\\message.png"
+    );
 }
 
 void MainFrame::OnSize(wxSizeEvent& event)
 {
-    wxSize size = GetClientSize();  
+    wxSize size = GetClientSize(); 
 
     button->Resize(size, oldFrameSize);
     inputPassword->Resize(size, oldFrameSize);
@@ -200,8 +221,8 @@ void MainFrame::OnSize(wxSizeEvent& event)
     leftPanelHeader->Resize(size, oldFrameSize);
     leftPanelToggle->Resize(size, oldFrameSize);
     leftPanelRMText->Resize(size, oldFrameSize);
-    menu->Resize(size, oldFrameSize);
-    slider->Resize(size, oldFrameSize);
+    mainPanelHome->Resize(size, oldFrameSize);
+    mainPanelFunctions->Resize(size, oldFrameSize);
 
     event.Skip();
 }
