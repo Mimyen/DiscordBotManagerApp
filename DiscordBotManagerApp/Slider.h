@@ -41,6 +41,12 @@ protected:
 	/// <param name="event">Event passed to the function.</param>
 	virtual void OnMouseLeftDown(wxMouseEvent& event);
 
+	/// <summary>
+	/// Function that is run whenever mouse is being moved over the element.
+	/// </summary>
+	/// <param name="event">Event passed to the function.</param>
+	void OnMouseMove(wxMouseEvent& event);
+
 
 	wxColour bg;
 	wxColour bar;

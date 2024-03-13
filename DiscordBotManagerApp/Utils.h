@@ -2,6 +2,8 @@
 
 #include "libs.h"
 
+#define DBC(x) std::to_string(x).c_str()
+
 class Utils
 {
 public:

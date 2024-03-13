@@ -14,7 +14,7 @@
 #include "Slider.h"
 
 #define BOT_IP L"127.0.0.1"
-#define BOT_PORT 2223
+#define BOT_PORT 2222
 
 /// <summary>
 /// This class represents entire frame of the main window.

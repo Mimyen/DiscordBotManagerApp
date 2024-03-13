@@ -5,6 +5,8 @@ Slider::Slider(wxWindow* parent, wxWindowID id, wxPoint pos, wxSize size, Functi
 	bar(wxColour(60, 60, 60)), m_callback(callback), m_value(0.5), wxPanel(parent, id, pos, size), m_isHovered(false), m_isDragging(false)
 {
 	SetBackgroundStyle(wxBG_STYLE_PAINT);
+
+	//GetParent()->Bind(wxEVT_LEFT_UP, &Slider::OnMouseLeftUp, this);
 }
 
 void Slider::Resize(wxSize windowSize, wxSize defaultWindowSize)
@@ -94,11 +96,23 @@ void Slider::Render(wxDC& dc)
 
 		// Draw rounded rectangle
 		gc->SetBrush(wxBrush(bar));
-		gc->DrawRoundedRectangle(0, size.y - size.y / 2, size.x * 2, size.y, size.y / 2);
+		gc->DrawRoundedRectangle(
+			size.y / 2, 
+			size.y - size.y / 2, 
+			size.x * 2 - size.y, 
+			size.y, 
+			size.y / 2
+		);
 
 		if (m_value > 0) {
 			gc->SetBrush(wxBrush(m_isHovered || m_isDragging ? hover : fg));
-			gc->DrawRoundedRectangle(0, size.y - size.y / 2, m_value * size.x * 2, size.y, size.y / 2);
+			gc->DrawRoundedRectangle(
+				size.y / 2, 
+				size.y - size.y / 2, 
+				m_value * (size.x * 2 - size.y), 
+				size.y, 
+				size.y / 2
+			);
 		}
 
 		if (m_isHovered || m_isDragging) {
@@ -137,23 +151,76 @@ void Slider::OnMouseLeftUp(wxMouseEvent& event)
 {
 	if (m_isDragging) {
 		m_isDragging = false;
+
+		if (HasCapture()) {
+			ReleaseMouse();
+		}
+
 		if (!m_isHovered) Refresh();
 	}
 }
 
 void Slider::OnMouseLeftDown(wxMouseEvent& event)
 {
-	if (false) {
+	wxSize size = GetSize();
 
+	wxSize rectSize(size.y, size.y);
+	wxPoint rectPos(m_value * (size.x - size.y), 0);
+
+	wxRect rect(rectPos, rectSize);
+
+	if (rect.Contains(event.GetPosition())) {
+		m_isDragging = true;
+		if (!HasCapture()) {
+			CaptureMouse();
+		}
 	}
 	else {
-		double value = (double)event.GetPosition().x / (double)GetSize().x;
-		if (m_value != std::round(value * 100.0) / 100.0) {
-			m_value = std::round(value * 100.0) / 100.0;
-			wxLogDebug(std::to_string(value).c_str());
-			wxLogDebug(std::to_string(GetSize().x).c_str());
-			wxLogDebug(std::to_string(event.GetPosition().x).c_str());
-			Refresh();
+		if (event.GetPosition().x >= size.y / 2 && event.GetPosition().x < size.x - size.y / 2) {
+			double value = (double)(event.GetPosition().x - size.y / 2) / (double)(size.x - size.y);
+			if (m_value != std::round(value * 100.0) / 100.0) {
+				m_value = std::round(value * 100.0) / 100.0;
+				Refresh();
+			}
+		}
+		else if (event.GetPosition().x < size.y) {
+			if (m_value != 0) {
+				m_value = 0;
+				Refresh();
+			}
+		}
+		else if (event.GetPosition().x > size.x - size.y / 2) {
+			if (m_value != 1) {
+				m_value = 1;
+				Refresh();
+			}
+		}
+	}
+}
+
+void Slider::OnMouseMove(wxMouseEvent& event)
+{
+	if (HasCapture()) {
+		wxSize size = GetSize();
+
+		if (event.GetPosition().x >= size.y / 2 && event.GetPosition().x < size.x - size.y / 2) {
+			double value = (double)(event.GetPosition().x - size.y / 2) / (double)(size.x - size.y);
+			if (m_value != std::round(value * 100.0) / 100.0) {
+				m_value = std::round(value * 100.0) / 100.0;
+				Refresh();
+			}
+		}
+		else if (event.GetPosition().x < size.y) {
+			if (m_value != 0) {
+				m_value = 0;
+				Refresh();
+			}
+		}
+		else if (event.GetPosition().x > size.x - size.y / 2) {
+			if (m_value != 1) {
+				m_value = 1;
+				Refresh();
+			}
 		}
 	}
 }
@@ -164,4 +231,5 @@ BEGIN_EVENT_TABLE(Slider, wxPanel)
 	EVT_ENTER_WINDOW(Slider::OnMouseEnter)
 	EVT_LEFT_UP(Slider::OnMouseLeftUp)
 	EVT_LEFT_DOWN(Slider::OnMouseLeftDown)
+	EVT_MOTION(Slider::OnMouseMove)
 END_EVENT_TABLE()

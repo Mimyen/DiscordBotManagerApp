@@ -208,6 +208,7 @@ void MainFrame::OnSize(wxSizeEvent& event)
     leftPanelToggle->Resize(size, oldFrameSize);
     leftPanelRMText->Resize(size, oldFrameSize);
     menu->Resize(size, oldFrameSize);
+    slider->Resize(size, oldFrameSize);
     //wxLogDebug(std::to_string(rightPanel->GetSize().GetWidth()).c_str());
     //wxLogDebug(std::to_string(rightPanel->GetSize().GetHeight()).c_str());
     event.Skip();
