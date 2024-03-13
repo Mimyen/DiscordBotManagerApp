@@ -1,8 +1,7 @@
 #include "RoundedButton.h"
 
 RoundedButton::RoundedButton(wxWindow* parent, const wxString& label, const wxPoint& position, 
-    const wxSize& size, const wxColour& colour, const wxColour& clicked, const wxColour& bg, 
-    const wxColour& fg, ButtonCallback callback, bool drawOutline, const wxColour& outline, unsigned int outlineSize)
+    const wxSize& size, ButtonCallback callback, bool drawOutline, unsigned int outlineSize)
 	: wxPanel(parent, wxID_ANY, position, size), m_label(label), m_hovered(false), 
     m_clicked(false), m_hold(false), outlineSize(outlineSize), drawOutline(drawOutline)
 {
@@ -15,11 +14,11 @@ RoundedButton::RoundedButton(wxWindow* parent, const wxString& label, const wxPo
     Bind(wxEVT_BUTTON, &RoundedButton::OnButtonClick, this);
 
     // Set variables
-    this->colour = colour;
-    this->bg = bg;
-    this->fg = fg;
-    this->clicked = clicked;
-    this->outline = outline;
+    this->colour = wxColour(26, 188, 156);
+    this->bg = wxColour(18, 18, 18);
+    this->fg = wxColour(0, 0, 0);
+    this->clicked = wxColour(17, 120, 99);
+    this->outline = wxColour(255, 255, 255);
     this->radius = size.y;
     this->defaultSize = size;
     this->defaultPos = position;
@@ -66,6 +65,61 @@ void RoundedButton::Resize(wxSize windowSize, wxSize defaultWindowSize)
     radius = GetSize().y;
 
     Refresh();
+}
+
+bool RoundedButton::SetBackgroundColour(const wxColour& colour)
+{
+    try {
+        bg = colour;
+        return true;
+    }
+    catch (std::exception e) {
+        return false;
+    }
+}
+
+bool RoundedButton::SetForegroundColour(const wxColour& colour)
+{
+    try {
+        fg = colour;
+        return true;
+    }
+    catch (std::exception e) {
+        return false;
+    }
+}
+
+bool RoundedButton::SetOutlineColour(const wxColour& colour)
+{
+    try {
+        outline = colour;
+        return true;
+    }
+    catch (std::exception e) {
+        return false;
+    }
+}
+
+bool RoundedButton::SetPressedColour(const wxColour& colour)
+{
+    try {
+        clicked = colour;
+        return true;
+    }
+    catch (std::exception e) {
+        return false;
+    }
+}
+
+bool RoundedButton::SetColour(const wxColour& colour)
+{
+    try {
+        this->colour = colour;
+        return true;
+    }
+    catch (std::exception e) {
+        return false;
+    }
 }
 
 void RoundedButton::OnPaint(wxPaintEvent& event)

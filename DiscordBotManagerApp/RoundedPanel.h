@@ -17,8 +17,11 @@ public:
     /// <param name="offsetYT">Offset from the top.</param>
     /// <param name="offsetXB">Offset from the right.</param>
     /// <param name="offsetYB">Offset from the bottom.</param>
-    RoundedPanel(wxWindow* parent, wxWindowID id = wxID_ANY, wxColour fg = wxColour(18, 18, 18), wxColour bg = wxColour(0, 0, 0), 
-        unsigned int offsetXT = 0, unsigned int offsetYT = 0, unsigned int offsetXB = 0, unsigned int offsetYB = 0);
+    RoundedPanel(wxWindow* parent, wxWindowID id = wxID_ANY, unsigned int offsetXT = 0, 
+        unsigned int offsetYT = 0, unsigned int offsetXB = 0, unsigned int offsetYB = 0);
+
+    virtual bool SetBackgroundColour(const wxColour& colour);
+    virtual bool SetForegroundColour(const wxColour& colour);
 
 protected:
     /// <summary>

@@ -5,9 +5,9 @@
 class Slider : public wxPanel
 {
 public:
-	using FunctionCallback = std::function<void()>;
+	using FunctionCallback = std::function<void(double value)>;
 
-	Slider(wxWindow* parent, wxWindowID id = wxID_ANY, wxPoint pos = wxDefaultPosition, wxSize size = wxDefaultSize, FunctionCallback callback = []() {});
+	Slider(wxWindow* parent, wxWindowID id = wxID_ANY, wxPoint pos = wxDefaultPosition, wxSize size = wxDefaultSize, FunctionCallback callback = [](double value = 0.0) {});
 
 	/// <summary>
 	/// Resizes the window in relation to window size.

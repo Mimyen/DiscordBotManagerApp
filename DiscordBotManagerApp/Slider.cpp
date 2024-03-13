@@ -5,8 +5,6 @@ Slider::Slider(wxWindow* parent, wxWindowID id, wxPoint pos, wxSize size, Functi
 	bar(wxColour(60, 60, 60)), m_callback(callback), m_value(0.5), wxPanel(parent, id, pos, size), m_isHovered(false), m_isDragging(false)
 {
 	SetBackgroundStyle(wxBG_STYLE_PAINT);
-
-	//GetParent()->Bind(wxEVT_LEFT_UP, &Slider::OnMouseLeftUp, this);
 }
 
 void Slider::Resize(wxSize windowSize, wxSize defaultWindowSize)
@@ -180,18 +178,21 @@ void Slider::OnMouseLeftDown(wxMouseEvent& event)
 			double value = (double)(event.GetPosition().x - size.y / 2) / (double)(size.x - size.y);
 			if (m_value != std::round(value * 100.0) / 100.0) {
 				m_value = std::round(value * 100.0) / 100.0;
+				if (m_callback) m_callback(m_value);
 				Refresh();
 			}
 		}
 		else if (event.GetPosition().x < size.y) {
 			if (m_value != 0) {
 				m_value = 0;
+				if (m_callback) m_callback(m_value);
 				Refresh();
 			}
 		}
 		else if (event.GetPosition().x > size.x - size.y / 2) {
 			if (m_value != 1) {
 				m_value = 1;
+				if (m_callback) m_callback(m_value);
 				Refresh();
 			}
 		}
@@ -207,18 +208,21 @@ void Slider::OnMouseMove(wxMouseEvent& event)
 			double value = (double)(event.GetPosition().x - size.y / 2) / (double)(size.x - size.y);
 			if (m_value != std::round(value * 100.0) / 100.0) {
 				m_value = std::round(value * 100.0) / 100.0;
+				if (m_callback) m_callback(m_value);
 				Refresh();
 			}
 		}
 		else if (event.GetPosition().x < size.y) {
 			if (m_value != 0) {
 				m_value = 0;
+				if (m_callback) m_callback(m_value);
 				Refresh();
 			}
 		}
 		else if (event.GetPosition().x > size.x - size.y / 2) {
 			if (m_value != 1) {
 				m_value = 1;
+				if (m_callback) m_callback(m_value);
 				Refresh();
 			}
 		}

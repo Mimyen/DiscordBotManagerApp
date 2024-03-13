@@ -140,7 +140,9 @@
     <ClCompile Include="MenuPopup.cpp" />
     <ClCompile Include="RectangleObj.cpp" />
     <ClCompile Include="RoundedButton.cpp" />
+    <ClCompile Include="RoundedItem.cpp" />
     <ClCompile Include="RoundedPanel.cpp" />
+    <ClCompile Include="RoundedScrollPanel.cpp" />
     <ClCompile Include="ScrollButton.cpp" />
     <ClCompile Include="ScrollControl.cpp" />
     <ClCompile Include="ScrollPanel.cpp" />
@@ -163,7 +165,9 @@
     <ClInclude Include="MenuPopup.h" />
     <ClInclude Include="RectangleObj.h" />
     <ClInclude Include="RoundedButton.h" />
+    <ClInclude Include="RoundedItem.h" />
     <ClInclude Include="RoundedPanel.h" />
+    <ClInclude Include="RoundedScrollPanel.h" />
     <ClInclude Include="ScrollButton.h" />
     <ClInclude Include="ScrollControl.h" />
     <ClInclude Include="ScrollPanel.h" />

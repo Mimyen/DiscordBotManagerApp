@@ -1,17 +1,39 @@
 #include "RoundedPanel.h"
 
-RoundedPanel::RoundedPanel(wxWindow* parent, wxWindowID id, wxColour fg, wxColour bg, unsigned int offsetXT, unsigned int offsetYT, unsigned int offsetXB, unsigned int offsetYB) : wxPanel(parent, id)
+RoundedPanel::RoundedPanel(wxWindow* parent, wxWindowID id, unsigned int offsetXT, unsigned int offsetYT, unsigned int offsetXB, unsigned int offsetYB) : wxPanel(parent, id)
 {
     // Bind resizing event
     Bind(wxEVT_SIZE, &RoundedPanel::OnSize, this);
 
     // Set variables
-    this->bg = bg;
-    this->fg = fg;
+    this->bg = wxColour(0, 0, 0);
+    this->fg = wxColour(18, 18, 18);
     this->offsetXT = offsetXT;
     this->offsetYT = offsetYT;
     this->offsetXB = offsetXB;
     this->offsetYB = offsetYB;
+}
+
+bool RoundedPanel::SetBackgroundColour(const wxColour& colour)
+{
+    try {
+        bg = colour;
+        return true;
+    }
+    catch (std::exception e) {
+        return false;
+    }
+}
+
+bool RoundedPanel::SetForegroundColour(const wxColour& colour)
+{
+    try {
+        fg = colour;
+        return true;
+    }
+    catch (std::exception e) {
+        return false;
+    }
 }
 
 void RoundedPanel::OnPaint(wxPaintEvent& event)

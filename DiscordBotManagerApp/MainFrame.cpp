@@ -1,42 +1,5 @@
 #include "MainFrame.h"
 
-
-
-void OnButtonClick(MainFrame* master)
-{
-    std::vector<std::string> data;
-    data.push_back(master->inputLogin->GetValue().ToStdString());
-    data.push_back(master->inputPassword->GetValue().ToStdString());
-
-    if (master->socketHandler->Handle(authorize, data) == "false") {
-        wxMessageBox("Couldn't connect to the server!");
-    }
-    else {
-        master->loginPanel->Hide();
-        master->mainPanel->Show();
-        master->Layout();
-
-        std::fstream loginData;
-        loginData.open("loginData", std::ios::out | std::ios::trunc);
-
-        if (master->leftPanelToggle->GetState()) {
-            loginData << "true\n";
-            loginData << master->inputLogin->GetValue() << '\n';
-            loginData << master->inputPassword->GetValue();
-        }
-        else loginData << "false";
-    }
-}
-
-void bOnButtonClick(MainFrame* master, bool flag) {
-    // Perform some action when the button is clicked
-    // For example, display a message box
-    // wxMessageBox("Button clicked!");
-
-    wxLogDebug(std::to_string(flag).c_str());
-}
-
-
 MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
     : wxFrame(NULL, wxID_ANY, title, pos, size)
 {
@@ -109,7 +72,7 @@ void MainFrame::SetupLoginPanel()
 {
     // Split the login panel into two halves
     rightPanel = new wxPanel(loginPanel, wxID_ANY);
-    leftPanel = new RoundedPanel(loginPanel, wxID_ANY, wxColour(18, 18, 18), wxColour(0 ,0, 0), 10, 0, 10, 10); // Use RoundedPanel instead of wxPanel
+    leftPanel = new RoundedPanel(loginPanel, wxID_ANY, 10, 0, 10, 10); // Use RoundedPanel instead of wxPanel
 
     // Setting up fonts
     wxFont tipFont = light;
@@ -130,8 +93,37 @@ void MainFrame::SetupLoginPanel()
     leftPanelHeader->SetForegroundColour(wxColour(255, 255, 255));
     leftPanelHeader->SetFont(headerFont);
 
-    button = new RoundedButton(leftPanel, "Log In", wxPoint(160, 380), wxSize(300, 50),
-        wxColour(26, 188, 156), wxColour(17, 120, 99), wxColour(18, 18, 18), wxColour(0, 0, 0), [this]() { OnButtonClick(this); });
+    button = new RoundedButton(
+        leftPanel, 
+        "Log In", 
+        wxPoint(160, 380), 
+        wxSize(300, 50),
+        [this]() { 
+            std::vector<std::string> data;
+            data.push_back(this->inputLogin->GetValue().ToStdString());
+            data.push_back(this->inputPassword->GetValue().ToStdString());
+
+            if (this->socketHandler->Handle(authorize, data) == "false") {
+                wxMessageBox("Couldn't connect to the server!");
+            }
+            else {
+                this->loginPanel->Hide();
+                this->mainPanel->Show();
+                this->Layout();
+
+                std::fstream loginData;
+                loginData.open("loginData", std::ios::out | std::ios::trunc);
+
+                if (this->leftPanelToggle->GetState()) {
+                    loginData << "true\n";
+                    loginData << this->inputLogin->GetValue() << '\n';
+                    loginData << this->inputPassword->GetValue();
+                }
+                else loginData << "false";
+            }
+        }
+    );
+
     button->SetFont(tipFont);
 
     inputLogin = new LabeledTextInputPanel(leftPanel, wxID_ANY, "Username", wxPoint(160, 190), wxSize(300, 50), wxTE_PROCESS_ENTER, wxDefaultValidator, "name", button);
@@ -143,7 +135,7 @@ void MainFrame::SetupLoginPanel()
     inputPassword->SetFont(tipFont);
     inputPassword->SetLabelFont(labelFont);
 
-    leftPanelToggle = new ToggleButton(leftPanel, wxID_ANY, wxPoint(160, 310), wxSize(40, 20), [this](bool flag = true) { bOnButtonClick(this, flag); });
+    leftPanelToggle = new ToggleButton(leftPanel, wxID_ANY, wxPoint(160, 310), wxSize(40, 20), [this](bool flag = true) {  });
 
     leftPanelRMText = new Label(leftPanel, wxID_ANY, "Remember me", wxPoint(205, 312), wxSize(110, 18));
     leftPanelRMText->SetFont(tipFont);
@@ -178,7 +170,7 @@ void MainFrame::SetupMainPanel()
 {
     mainPanel->SetBackgroundColour(wxColour(0, 0, 0));
     
-    RoundedPanel* panel = new RoundedPanel(mainPanel, wxID_ANY, wxColour(18, 18, 18), wxColour(0, 0, 0), 0, 0, 0, 0);
+    RoundedPanel* panel = new RoundedPanel(mainPanel, wxID_ANY, 0, 0, 0, 0);
     wxBoxSizer* mainPanelSizer = new wxBoxSizer(wxHORIZONTAL);
     mainPanelSizer->Add(panel, 1, wxEXPAND | wxALL, 0);
     menu = new DropdownMenu(panel, wxID_ANY, wxPoint(50, 50), wxSize(200, 50), [this](wxString option) { wxLogDebug(option); });
@@ -188,7 +180,7 @@ void MainFrame::SetupMainPanel()
     menu->AddItem("Item 4");
     menu->AddItem("Item 5");
 
-    slider = new Slider(panel, wxID_ANY, wxPoint(350, 50), wxSize(100, 15), [this]() {});
+    slider = new Slider(panel, wxID_ANY, wxPoint(350, 50), wxSize(100, 15), [this](double value) { LDC(value); });
 
     mainPanel->SetSizer(mainPanelSizer);
 }
@@ -196,6 +188,7 @@ void MainFrame::SetupMainPanel()
 void MainFrame::OnSize(wxSizeEvent& event)
 {
     wxSize size = GetClientSize();  
+
     button->Resize(size, oldFrameSize);
     inputPassword->Resize(size, oldFrameSize);
     inputLogin->Resize(size, oldFrameSize);
@@ -209,8 +202,7 @@ void MainFrame::OnSize(wxSizeEvent& event)
     leftPanelRMText->Resize(size, oldFrameSize);
     menu->Resize(size, oldFrameSize);
     slider->Resize(size, oldFrameSize);
-    //wxLogDebug(std::to_string(rightPanel->GetSize().GetWidth()).c_str());
-    //wxLogDebug(std::to_string(rightPanel->GetSize().GetHeight()).c_str());
+
     event.Skip();
 }
 

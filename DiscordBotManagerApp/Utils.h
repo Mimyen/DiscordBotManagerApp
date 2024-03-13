@@ -2,12 +2,11 @@
 
 #include "libs.h"
 
-#define DBC(x) std::to_string(x).c_str()
+#define LDC(x) wxLogDebug(std::to_string(x).c_str())
 
 class Utils
 {
 public:
-
     static wxImage CreateAlphaImage(wxSize size) {
         // Create a temporary image to initialize the bitmap with transparent black pixels
         wxImage img(size.x * 2, size.y * 2);
@@ -73,6 +72,7 @@ public:
     static wxRegion GetRoundedRegion(wxDC& dc, wxSize size, int radius = 20, int multiplier = 2) {
         // Create a rounded rectangle bitmap and then a region from it
         wxBitmap roundedRectBitmap = Utils::CreateRoundedRectangleBitmap(dc, size * 2, radius, multiplier); // 10 is the corner radius
+        // roundedRectBitmap.SaveFile("pawel.png", wxBITMAP_TYPE_PNG);
         return wxRegion(roundedRectBitmap, wxColour(0, 0, 0, 0), 1); // Threshold near black to treat as transparent
     };
 };

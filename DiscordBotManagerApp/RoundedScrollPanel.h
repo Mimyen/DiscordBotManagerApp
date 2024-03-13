@@ -1,13 +1,11 @@
 #pragma once
 
 #include "Utils.h"
-#include "ScrollButton.h"
-
 
 /// <summary>
 /// Simple Panel with scroll functionalities.
 /// </summary>
-class ScrollPanel : public wxPanel {
+class RoundedScrollPanel : public wxPanel {
 public:
     using FunctionCallback = std::function<void()>;
 
@@ -18,7 +16,7 @@ public:
     /// <param name="pos">Position where Image will be drawn.</param>
     /// <param name="size">Size of the popup.</param>
     /// <param name="callback">Callback to a function</param>
-    ScrollPanel(wxWindow* parent, const wxPoint& pos, const wxSize& size, FunctionCallback callback = []() {});
+    RoundedScrollPanel(wxWindow* parent, const wxPoint& pos, const wxSize& size, FunctionCallback callback = []() {});
 
     /// <summary>
     /// Adds control to the panel. Need to specify class and arguments of the control.
@@ -29,7 +27,7 @@ public:
         m_scrollControls.emplace_back(std::make_unique<T>(this, std::forward<Args>(args)...));
         RecalculateLayout();
     }
-    
+
     /// <summary>
     /// Recalculates layout of the panel.
     /// </summary>
@@ -108,7 +106,7 @@ protected:
     void SetFocus();
 
 private:
-    std::vector<std::unique_ptr<ScrollControl>> m_scrollControls;
+    std::vector<std::unique_ptr<wxPanel>> m_scrollControls;
     int m_scrollPosition; // Current scroll position
     int m_totalContentHeight; // Total content height
     int m_lastMouseY;

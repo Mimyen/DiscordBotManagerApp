@@ -20,18 +20,12 @@ public:
 	/// <param name="label">Label displayed on the button.</param>
 	/// <param name="pos">Position where component will be drawn.</param>
 	/// <param name="size">Size of the component.</param>
-	/// <param name="colour">Color of the idle button.</param>
-	/// <param name="clicked">Color of the clicked button.</param>
-	/// <param name="bg">Color of the background.</param>
-	/// <param name="fg">Color of the text.</param>
 	/// <param name="callback">Function that will be run when button is clicked.</param>
 	/// <param name="master">Pointer to the window</param>
 	/// <param name="drawOutline">Changes whether outline will be drawn or not.</param>
-	/// <param name="outline">Color of the outline.</param>
 	/// <param name="outlineSize">Thickness of the outline.</param>
-	RoundedButton(wxWindow* parent, const wxString& label, const wxPoint& position, const wxSize& size,
-		const wxColour& colour, const wxColour& clicked, const wxColour& bg, const wxColour& fg, ButtonCallback callback,
-		bool drawOutline = false, const wxColour& outline = wxColour(255, 255, 255), unsigned int outlineSize = 2);
+	RoundedButton(wxWindow* parent, const wxString& label, const wxPoint& position, const wxSize& size, 
+		ButtonCallback callback, bool drawOutline = false, unsigned int outlineSize = 2);
 
 	/// <summary>
 	/// Setter function for the label.
@@ -51,6 +45,12 @@ public:
 	/// <param name="windowSize">Current window size.</param>
 	/// <param name="defaultWindowSize">Size of the window that it is created with.</param>
 	virtual void Resize(wxSize windowSize, wxSize defaultWindowSize);
+
+	virtual bool SetBackgroundColour(const wxColour& colour);
+	virtual bool SetForegroundColour(const wxColour& colour);
+	virtual bool SetOutlineColour(const wxColour& colour);
+	virtual bool SetPressedColour(const wxColour& colour);
+	virtual bool SetColour(const wxColour& colour);
 
 protected:
 	/// <summary>

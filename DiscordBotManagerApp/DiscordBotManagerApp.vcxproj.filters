@@ -84,6 +84,12 @@
     <ClCompile Include="Slider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="RoundedScrollPanel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RoundedItem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DiscordBotManagerApp.h">
@@ -150,6 +156,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Slider.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RoundedScrollPanel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RoundedItem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
