@@ -2,7 +2,7 @@
 
 RoundedScrollPanel::RoundedScrollPanel(wxWindow* parent, const wxPoint& pos, const wxSize& size)
     : m_scrollPosition(0), m_totalContentHeight(0), m_isDragging(false), m_lastMouseY(0), 
-    m_isScrollbarHovered(false), bg(wxColour(0, 0, 0)), fg(wxColour(18, 18, 18)),
+    m_isScrollbarHovered(false), bg(wxColour(0, 0, 0)), fg(wxColour(0,0,0)),
     defaultPos(pos), defaultSize(size)
 {
     SetBackgroundStyle(wxBG_STYLE_PAINT);

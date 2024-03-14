@@ -69,16 +69,16 @@ wxString SocketHandler::Handle(CALL callId, std::vector<std::string> data)
         bufferMessage["password"] = data[1];
 
         message = bufferMessage.dump();
-        wxLogDebug(message.c_str());
+        // wxLogDebug(message.c_str());
 
         message = Message(message);
-        wxLogDebug(message.c_str());
+        // wxLogDebug(message.c_str());
         
         output = nlohmann::json::parse(message);
         if (output["response"] == "Error") break;
 
         token = output["Token"];
-        wxLogDebug(token.c_str());
+        // wxLogDebug(token.c_str());
         
         returnValue = "true";
         break;

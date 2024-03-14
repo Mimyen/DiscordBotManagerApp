@@ -54,6 +54,12 @@ private:
     /// <param name="event">Event that is called.</param>
     void OnSize(wxSizeEvent& event);
 
+    void HideMainPanelSubpanels();
+
+    void SetupMessageSubpanel();
+
+    void SetupHomeSubpanel();
+
     wxFont light = wxFont(12, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT);
     wxFont medium = wxFont(12, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_MEDIUM);
     wxFont bold = wxFont(12, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
@@ -89,7 +95,13 @@ public:
     // mainPanel
     RoundedScrollPanel* mainPanelHome;
     RoundedScrollPanel* mainPanelFunctions;
+    RoundedPanel* mainPanelHomeSubpanel;
+    RoundedPanel* mainPanelMessageSubpanel;
 
+    // mainPanel->HomeSubpanel
+
+
+    // mainPanel->MessageSubpanel
 
 
     DECLARE_EVENT_TABLE();

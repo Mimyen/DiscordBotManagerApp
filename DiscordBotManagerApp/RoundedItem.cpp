@@ -1,7 +1,7 @@
 #include "RoundedItem.h"
 
-RoundedItem::RoundedItem(wxWindow* parent, wxWindowID id, wxPoint pos, wxSize size, ButtonCallback callback, bool showIcon, wxString iconPath)
-    : bg(wxColour(18, 18, 18)), m_showIcon(showIcon), m_isSelected(false), m_isHovered(false), m_isPressed(false),
+RoundedItem::RoundedItem(wxWindow* parent, wxWindowID id, wxPoint pos, wxSize size, ButtonCallback callback, bool showIcon, wxString iconPath, bool selected)
+    : bg(wxColour(0,0,0)), m_showIcon(showIcon), m_isSelected(false), m_isHovered(false), m_isPressed(false),
     wxPanel(parent, id, pos, size), m_isShown(false), fg(wxColour(114, 114, 114)), selected(wxColour(255, 255, 255)), 
     m_callback(callback), hover(wxColour(196, 196, 196))
 {
@@ -14,6 +14,8 @@ RoundedItem::RoundedItem(wxWindow* parent, wxWindowID id, wxPoint pos, wxSize si
 
         lastIcon = icon;
     }
+
+    SetSelected(selected);
 }
 
 bool RoundedItem::SetBackgroundColour(const wxColour& colour)

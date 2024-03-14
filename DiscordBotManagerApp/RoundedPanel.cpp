@@ -2,6 +2,8 @@
 
 RoundedPanel::RoundedPanel(wxWindow* parent, wxWindowID id, unsigned int offsetXT, unsigned int offsetYT, unsigned int offsetXB, unsigned int offsetYB) : wxPanel(parent, id)
 {
+
+    SetBackgroundStyle(wxBG_STYLE_PAINT);
     // Bind resizing event
     Bind(wxEVT_SIZE, &RoundedPanel::OnSize, this);
 
@@ -12,6 +14,20 @@ RoundedPanel::RoundedPanel(wxWindow* parent, wxWindowID id, unsigned int offsetX
     this->offsetYT = offsetYT;
     this->offsetXB = offsetXB;
     this->offsetYB = offsetYB;
+}
+
+void RoundedPanel::Resize(wxSize windowSize, wxSize defaultWindowSize)
+{
+    // Calculate new size of the element
+    int objectX = defaultSize.x * windowSize.x / defaultWindowSize.x; 
+    int objectY = defaultSize.y * windowSize.y / defaultWindowSize.y;
+    int objectWidth = defaultPos.x * windowSize.x / defaultWindowSize.x;
+    int objectHeight = defaultPos.y * windowSize.y / defaultWindowSize.y;
+
+    // Set the new position and size for the object
+    SetSize(objectWidth, objectHeight, objectX, objectY);
+
+    Refresh();
 }
 
 bool RoundedPanel::SetBackgroundColour(const wxColour& colour)
@@ -36,24 +52,37 @@ bool RoundedPanel::SetForegroundColour(const wxColour& colour)
     }
 }
 
+void RoundedPanel::SetRect(wxPoint pos, wxSize size)
+{
+    SetSize(size);
+    defaultSize = size;
+
+    SetPosition(pos);
+    defaultPos = pos;
+}
+
 void RoundedPanel::OnPaint(wxPaintEvent& event)
 {
-    wxPaintDC dc(this);
+    wxAutoBufferedPaintDC dc(this);
     Render(dc);
 }
 
 void RoundedPanel::Render(wxDC& dc)
 {
+    dc.Clear();
+
     // Get size of the panel
     wxSize size = GetClientSize();
-    int radius = 10;
 
     // Set background color
-    dc.SetBrush(wxBrush(fg));
     dc.SetPen(*wxTRANSPARENT_PEN);
+    dc.SetBackground(wxBrush(bg));
 
     // Draw rounded rectangle
-    dc.DrawRoundedRectangle(offsetXT, offsetYT, size.x - offsetXB, size.y - offsetYB - offsetYT, radius);
+    dc.SetBrush(wxBrush(bg));
+    dc.DrawRectangle(0, 0, size.x, size.y);
+    dc.SetBrush(wxBrush(fg));
+    dc.DrawRoundedRectangle(offsetXT, offsetYT, size.x - offsetXB, size.y - offsetYB - offsetYT, 12);
 }
 
 void RoundedPanel::OnSize(wxSizeEvent& event)

@@ -8,7 +8,7 @@ public:
 	using ButtonCallback = std::function<void()>;
 
 	RoundedItem(wxWindow* parent, wxWindowID id = wxID_ANY, wxPoint pos = wxDefaultPosition, 
-		wxSize size = wxDefaultSize, ButtonCallback callback = []() {}, bool showIcon = false, wxString iconPath = "");
+		wxSize size = wxDefaultSize, ButtonCallback callback = []() {}, bool showIcon = false, wxString iconPath = "", bool selected = false);
 
 	virtual bool SetBackgroundColour(const wxColour& colour);
 	virtual bool SetForegroundColour(const wxColour& colour);

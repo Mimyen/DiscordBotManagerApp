@@ -12,7 +12,6 @@ public:
 	/// </summary>
 	/// <param name="parent">Pointer to cointainer that component will be in.</param>
 	/// <param name="id">Id of the object, useable for making calls.</param>
-	/// <param name="fg">Color of the text.</param>
     /// <param name="offsetXT">Offset from the left.</param>
     /// <param name="offsetYT">Offset from the top.</param>
     /// <param name="offsetXB">Offset from the right.</param>
@@ -20,8 +19,16 @@ public:
     RoundedPanel(wxWindow* parent, wxWindowID id = wxID_ANY, unsigned int offsetXT = 0, 
         unsigned int offsetYT = 0, unsigned int offsetXB = 0, unsigned int offsetYB = 0);
 
+    /// <summary>
+    /// Resizes the window in relation to window size.
+    /// </summary>
+    /// <param name="windowSize">Current window size.</param>
+    /// <param name="defaultWindowSize">Size of the window that it is created with.</param>
+    virtual void Resize(wxSize windowSize, wxSize defaultWindowSize);
+
     virtual bool SetBackgroundColour(const wxColour& colour);
     virtual bool SetForegroundColour(const wxColour& colour);
+    virtual void SetRect(wxPoint pos, wxSize size);
 
 protected:
     /// <summary>
@@ -48,6 +55,9 @@ protected:
     unsigned int offsetYT; 
     unsigned int offsetXB; 
     unsigned int offsetYB;
+
+    wxSize defaultSize;
+    wxPoint defaultPos;
 
     DECLARE_EVENT_TABLE();
 };
