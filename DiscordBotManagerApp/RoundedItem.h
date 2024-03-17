@@ -1,14 +1,14 @@
 #pragma once
 
-#include "Utils.h"
+#include "Hint.h"
 
 class RoundedItem : public wxPanel
 {
 public:
-	using ButtonCallback = std::function<void()>;
+	using ButtonCallback = std::function<bool()>;
 
 	RoundedItem(wxWindow* parent, wxWindowID id = wxID_ANY, wxPoint pos = wxDefaultPosition, 
-		wxSize size = wxDefaultSize, ButtonCallback callback = []() {}, bool showIcon = false, wxString iconPath = "", bool selected = false);
+		wxSize size = wxDefaultSize, ButtonCallback callback = []() { return false; }, wxString label = "", bool showIcon = false, wxString iconPath = "", bool selected = false, wxFont font = wxFont());
 
 	virtual bool SetBackgroundColour(const wxColour& colour);
 	virtual bool SetForegroundColour(const wxColour& colour);
@@ -16,6 +16,7 @@ public:
 	virtual bool SetSelectedColour(const wxColour& colour);
 	virtual void SetSelected(const bool& state);
 	virtual bool GetSelected() const;
+	virtual void UpdateFontSize(double mod);
 protected:
 	/// <summary>
 	/// Repaints the window.
@@ -70,8 +71,13 @@ protected:
 
 	wxSize defaultSize;
 	wxPoint defaultPos;
+	unsigned int defaultFont;
+
+	wxString m_label;
 
 	ButtonCallback m_callback;
+
+	Hint* m_hint;
 
 	DECLARE_EVENT_TABLE()
 };

@@ -220,7 +220,11 @@ void MainFrame::SetupLoginPanel()
 
 void MainFrame::SetupMainPanel()
 {
+    wxFont hintFont = light;
+    hintFont.SetPointSize(14);
+
     mainPanel->SetBackgroundColour(wxColour(0, 0, 0));
+
     mainPanelHome = new RoundedScrollPanel(
         mainPanel, 
         wxPoint(8, 0), 
@@ -236,17 +240,20 @@ void MainFrame::SetupMainPanel()
             mainPanelFunctions->UnselectAll();
             HideMainPanelSubpanels();
             mainPanelHomeSubpanel->Show();
+            return true;
         },
+        "Home",
         true,
         "assets\\icon\\home.png",
-        true 
+        true,
+        hintFont
     );
     
 
     mainPanelFunctions = new RoundedScrollPanel(
         mainPanel,
         wxPoint(8, 72),
-        wxSize(64, 592)
+        wxSize(64, 520)
     );
 
     mainPanelFunctions->AddControl<RoundedItem>(
@@ -258,9 +265,38 @@ void MainFrame::SetupMainPanel()
             mainPanelFunctions->UnselectAll();
             HideMainPanelSubpanels();
             mainPanelMessageSubpanel->Show();
+            return true;
         },
+        "Send Message",
         true,
-        "assets\\icon\\message.png"
+        "assets\\icon\\message.png",
+        false,
+        hintFont
+    );
+
+    mainPanelLogout = new RoundedScrollPanel(
+        mainPanel,
+        wxPoint(8, 600),
+        wxSize(64, 64)
+    );
+    mainPanelLogout->AddControl<RoundedItem>(
+        wxID_ANY,
+        wxDefaultPosition,
+        wxDefaultSize,
+        [this]() {
+            mainPanelHome->SelectAll();
+            mainPanelFunctions->UnselectAll();
+            HideMainPanelSubpanels();
+            mainPanelHomeSubpanel->Show();
+            mainPanel->Hide();
+            loginPanel->Show();
+            return false;
+        },
+        "Log Out",
+        true,
+        "assets\\icon\\logout.png",
+        false,
+        hintFont
     );
 
 
@@ -293,6 +329,7 @@ void MainFrame::OnSize(wxSizeEvent& event)
     leftPanelToggle->Resize(size, oldFrameSize);
     leftPanelRMText->Resize(size, oldFrameSize);
     mainPanelHome->Resize(size, oldFrameSize);
+    mainPanelLogout->Resize(size, oldFrameSize);
     mainPanelFunctions->Resize(size, oldFrameSize);
     mainPanelHomeSubpanel->Resize(size, oldFrameSize);
     mainPanelMessageSubpanel->Resize(size, oldFrameSize);

@@ -40,6 +40,7 @@ public:
     virtual void Resize(wxSize windowSize, wxSize defaultWindowSize);
 
     void UnselectAll();
+    void SelectAll();
 
 protected:
     /// <summary>

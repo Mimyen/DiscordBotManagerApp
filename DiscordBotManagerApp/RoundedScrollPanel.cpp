@@ -2,7 +2,7 @@
 
 RoundedScrollPanel::RoundedScrollPanel(wxWindow* parent, const wxPoint& pos, const wxSize& size)
     : m_scrollPosition(0), m_totalContentHeight(0), m_isDragging(false), m_lastMouseY(0), 
-    m_isScrollbarHovered(false), bg(wxColour(0, 0, 0)), fg(wxColour(0,0,0)),
+    m_isScrollbarHovered(false), bg(wxColour(0, 0, 0)), fg(wxColour(0, 0, 0)),
     defaultPos(pos), defaultSize(size)
 {
     SetBackgroundStyle(wxBG_STYLE_PAINT);
@@ -52,6 +52,16 @@ void RoundedScrollPanel::UnselectAll()
     for (auto& control : m_scrollControls) {
         if (control->GetSelected()) {
             control->SetSelected(false);
+            control->Refresh();
+        }
+    }
+}
+
+void RoundedScrollPanel::SelectAll()
+{
+    for (auto& control : m_scrollControls) {
+        if (!control->GetSelected()) {
+            control->SetSelected(true);
             control->Refresh();
         }
     }
@@ -186,6 +196,10 @@ void RoundedScrollPanel::Resize(wxSize windowSize, wxSize defaultWindowSize)
 
     // Set the new position and size for the object
     SetSize(objectWidth, objectHeight, objectX, objectY);
+
+    for (auto& control : m_scrollControls) {
+        control->UpdateFontSize((double)windowSize.y / (double)defaultWindowSize.y);
+    }
 
     RecalculateLayout();
 

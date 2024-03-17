@@ -94,6 +94,7 @@ public:
 
     // mainPanel
     RoundedScrollPanel* mainPanelHome;
+    RoundedScrollPanel* mainPanelLogout;
     RoundedScrollPanel* mainPanelFunctions;
     RoundedPanel* mainPanelHomeSubpanel;
     RoundedPanel* mainPanelMessageSubpanel;

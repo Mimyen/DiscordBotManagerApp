@@ -133,6 +133,7 @@
   <ItemGroup>
     <ClCompile Include="DiscordBotManagerApp.cpp" />
     <ClCompile Include="DropdownMenu.cpp" />
+    <ClCompile Include="Hint.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="Label.cpp" />
     <ClCompile Include="LabeledTextInputPanel.cpp" />
@@ -156,6 +157,7 @@
   <ItemGroup>
     <ClInclude Include="DiscordBotManagerApp.h" />
     <ClInclude Include="DropdownMenu.h" />
+    <ClInclude Include="Hint.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="Label.h" />
     <ClInclude Include="LabeledTextInputPanel.h" />

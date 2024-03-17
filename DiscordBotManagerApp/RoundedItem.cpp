@@ -1,12 +1,12 @@
 #include "RoundedItem.h"
 
-RoundedItem::RoundedItem(wxWindow* parent, wxWindowID id, wxPoint pos, wxSize size, ButtonCallback callback, bool showIcon, wxString iconPath, bool selected)
+RoundedItem::RoundedItem(wxWindow* parent, wxWindowID id, wxPoint pos, wxSize size, ButtonCallback callback, wxString label, bool showIcon, wxString iconPath, bool selected, wxFont font)
     : bg(wxColour(0,0,0)), m_showIcon(showIcon), m_isSelected(false), m_isHovered(false), m_isPressed(false),
     wxPanel(parent, id, pos, size), m_isShown(false), fg(wxColour(114, 114, 114)), selected(wxColour(255, 255, 255)), 
-    m_callback(callback), hover(wxColour(196, 196, 196))
+    m_callback(callback), hover(wxColour(196, 196, 196)), m_label(label), m_hint(nullptr), defaultFont(font.GetPointSize())
 {
     SetBackgroundStyle(wxBG_STYLE_PAINT);
-
+    SetFont(font);
     if (m_showIcon) {
         if (!icon.LoadFile(iconPath, wxBITMAP_TYPE_PNG)) {
             wxLogError("Couldn't load icon.");
@@ -70,6 +70,13 @@ void RoundedItem::SetSelected(const bool& state)
 bool RoundedItem::GetSelected() const
 {
     return m_isSelected;
+}
+
+void RoundedItem::UpdateFontSize(double mod)
+{
+    wxFont buffer = GetFont();
+    buffer.SetPointSize((int)(mod * defaultFont));
+    SetFont(buffer);
 }
 
 void RoundedItem::OnPaint(wxPaintEvent& event)
@@ -158,6 +165,15 @@ void RoundedItem::Render(wxDC& dc)
 void RoundedItem::OnMouseEnter(wxMouseEvent& event)
 {
     m_isHovered = true;
+
+    
+    wxSize extent = GetTextExtent(m_label) * 1.1;
+    m_hint = new Hint(this, m_label);
+    m_hint->SetPosition(GetScreenPosition() + wxPoint(GetSize().x + 4, (GetSize().y - extent.y) / 2));
+    m_hint->SetSize(extent);
+    m_hint->SetFont(GetFont());
+    m_hint->Popup();
+
     Refresh();
 }
 
@@ -165,14 +181,20 @@ void RoundedItem::OnMouseLeave(wxMouseEvent& event)
 {
     m_isHovered = false;
     m_isPressed = false;
+    if (m_hint) {
+        m_hint->Dismiss();
+        delete m_hint;
+    }
     Refresh();
 }
 
 void RoundedItem::OnMouseLeftUp(wxMouseEvent& event)
 {
     if (m_isPressed) {
-        if (m_callback) m_callback();
-        m_isSelected = true;
+
+        if (m_callback)
+            if (m_callback()) m_isSelected = true;
+   
         Refresh();
     }
 }
