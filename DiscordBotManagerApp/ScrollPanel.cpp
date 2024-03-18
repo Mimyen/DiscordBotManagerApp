@@ -3,7 +3,7 @@
 
 
 ScrollPanel::ScrollPanel(wxWindow* parent, const wxPoint& pos, const wxSize& size, FunctionCallback callback)
-    : m_scrollPosition(0), m_totalContentHeight(0), m_isDragging(false), m_lastMouseY(0), m_isScrollbarHovered(false), m_callback(callback)
+    : m_scrollPosition(0), m_totalContentHeight(0), m_isDragging(false), m_lastMouseY(0), m_isScrollbarHovered(false), m_callback(callback), m_rectInitialized(false)
 {
     SetBackgroundStyle(wxBG_STYLE_PAINT);
     Create(parent, wxID_ANY, pos, size, wxTRANSPARENT);
@@ -11,8 +11,6 @@ ScrollPanel::ScrollPanel(wxWindow* parent, const wxPoint& pos, const wxSize& siz
     //SetBackgroundColour(wxColour(255, 18, 18, 0)); // Example background color
     scrollBarRect = wxRect(size.x - 10 - 2, 2, 10, size.y);
 }
-
-
 
 void ScrollPanel::OnScroll(wxMouseEvent& event) {
     int rotation = event.GetWheelRotation();
@@ -90,15 +88,18 @@ void ScrollPanel::Render(wxDC& dc)
 {
     // Get size of the element
     wxSize size = GetClientSize();
-
-    // Create a rounded rectangle bitmap and then a region from it
-    wxRegion roundedRectRegion = Utils::GetRoundedRegion(dc, GetClientSize(), size.y / (m_scrollControls.size() >= 3 ? 12 : (m_scrollControls.size() == 2 ? 8 : 4))); // Threshold near black to treat as transparent
+    if (!m_rectInitialized) {
+        // Create a rounded rectangle bitmap and then a region from it
+        roundedRectRegion = Utils::GetRoundedRegion(dc, GetClientSize(), size.y / (m_scrollControls.size() >= 3 ? 12 : (m_scrollControls.size() == 2 ? 8 : 4))); // Threshold near black to treat as transparent
+        emptyBitmap = Utils::CreateEmptyBitmap(size);
+        m_rectInitialized = true;
+    }
 
     // Create a memory DC with the same properties as the paint DC
     wxMemoryDC memDC;
 
     // Create a bitmap with higher resolution for antialiasing
-    wxBitmap bmp = Utils::CreateEmptyBitmap(size);
+    wxBitmap bmp = emptyBitmap;
 
     // Select the bitmap into the memory DC
     memDC.SelectObject(bmp);
@@ -141,12 +142,6 @@ void ScrollPanel::Render(wxDC& dc)
     wxImage img = bmp.ConvertToImage().Rescale(size.x, size.y, wxIMAGE_QUALITY_HIGH);
     wxBitmap finalBmp(img);
 
-    // Draw the bitmap on the device context
-  /* 
-  * Better quality but laggy
-  * roundedRectRegion = Utils::GetRoundedRegion(dc, GetClientSize() / 2, 10, 8);
-  * dc.SetDeviceClippingRegion(roundedRectRegion);
-  */
     dc.DrawBitmap(finalBmp, 0, 0, true);
 }
 

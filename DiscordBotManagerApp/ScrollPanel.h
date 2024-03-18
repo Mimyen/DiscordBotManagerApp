@@ -115,7 +115,9 @@ private:
     wxRect scrollBarRect;
     bool m_isDragging;
     bool m_isScrollbarHovered;
+    bool m_rectInitialized;
     FunctionCallback m_callback;
-
+    wxRegion roundedRectRegion;
+    wxBitmap emptyBitmap;
     DECLARE_EVENT_TABLE()
 };

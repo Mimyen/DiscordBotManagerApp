@@ -43,6 +43,7 @@ private:
 
     wxSize m_size;
     bool* isOpen;
+    ScrollPanel* scrollPanel;
 
     wxDECLARE_EVENT_TABLE();
 };
