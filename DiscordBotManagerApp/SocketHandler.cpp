@@ -54,10 +54,11 @@ std::string SocketHandler::Message(std::string message)
     return "";
 }
 
-wxString SocketHandler::Handle(CALL callId, std::vector<std::string> data)
+std::vector<wxString> SocketHandler::Handle(CALL callId, std::vector<std::string> data)
 {
     std::string message;
-    std::string returnValue = "false";
+    std::vector<wxString> returnValue;
+    returnValue.push_back("false");
 
     nlohmann::json bufferMessage;
     nlohmann::json output;
@@ -80,7 +81,92 @@ wxString SocketHandler::Handle(CALL callId, std::vector<std::string> data)
         token = output["Token"];
         // wxLogDebug(token.c_str());
         
-        returnValue = "true";
+        returnValue[0] = "true";
+        break;
+    case getservers:
+        bufferMessage["message"] = "getservers";
+        bufferMessage["token"] = token;
+        bufferMessage["id"] = login;
+
+        message = bufferMessage.dump();
+        wxLogDebug(message.c_str());
+
+        message = Message(message);
+        wxLogDebug(message.c_str());
+
+        output = nlohmann::json::parse(message);
+        if (output["response"] == "Error") break;
+
+        for (auto& el : output["output"].items()) {
+            std::string buffer = el.value().dump().c_str();
+            std::string value = "";
+            for (size_t i = 0; i < buffer.size(); i++) {
+                if (i != 0 && i != buffer.size() - 1) {
+                    value += buffer[i];
+                }
+            }
+
+            returnValue.push_back(el.key().c_str());
+            returnValue.push_back(value.c_str());
+        }
+
+        //wxLogDebug(output["output"]["701534187789746217"].dump().c_str());
+
+        returnValue[0] = "true";
+
+        break;
+    case getchannels:
+        bufferMessage["message"] = "getchannels";
+        bufferMessage["token"] = token;
+        bufferMessage["id"] = login;
+        bufferMessage["guild_id"] = data[0];
+
+        message = bufferMessage.dump();
+        wxLogDebug(message.c_str());
+
+        message = Message(message);
+        wxLogDebug(message.c_str());
+
+        output = nlohmann::json::parse(message);
+        if (output["response"] == "Error") break;
+
+        for (auto& el : output["output"].items()) {
+            std::string buffer = el.value().dump().c_str();
+            std::string value = "";
+            for (size_t i = 0; i < buffer.size(); i++) {
+                if (i != 0 && i != buffer.size() - 1) {
+                    value += buffer[i];
+                }
+            }
+
+            returnValue.push_back(el.key().c_str());
+            returnValue.push_back(value.c_str());
+        }
+
+        //wxLogDebug(output["output"]["701534187789746217"].dump().c_str());
+
+        returnValue[0] = "true";
+        break;
+    case sendmessage:
+        bufferMessage["message"] = "send_message";
+        bufferMessage["token"] = token;
+        bufferMessage["id"] = login;
+        bufferMessage["guild_id"] = data[0];
+        bufferMessage["channel_id"] = data[1];
+        bufferMessage["input"] = data[2];
+
+        message = bufferMessage.dump();
+        wxLogDebug(message.c_str());
+
+        message = Message(message);
+        wxLogDebug(message.c_str());
+
+        output = nlohmann::json::parse(message);
+        if (output["response"] == "Error") break;
+
+        //wxLogDebug(output["output"]["701534187789746217"].dump().c_str());
+
+        returnValue[0] = "true";
         break;
     default: break;
     }

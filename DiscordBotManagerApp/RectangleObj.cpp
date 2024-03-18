@@ -25,8 +25,6 @@ void RectangleObj::Resize(wxSize windowSize, wxSize defaultWindowSize)
 
     // Set the new position and size for the object
     SetSize(objectWidth, objectHeight, objectX, objectY);
-
-    Refresh();
 }
 
 void RectangleObj::OnPaint(wxPaintEvent& event)

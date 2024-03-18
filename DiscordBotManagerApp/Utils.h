@@ -75,4 +75,11 @@ public:
         // roundedRectBitmap.SaveFile("pawel.png", wxBITMAP_TYPE_PNG);
         return wxRegion(roundedRectBitmap, wxColour(0, 0, 0, 0), 1); // Threshold near black to treat as transparent
     };
+
+    static wxFont UpscaledFont(const wxFont& font) {
+        wxFont buffer = font;
+        buffer.SetPointSize(buffer.GetPointSize() * 2);
+
+        return buffer;
+    }
 };

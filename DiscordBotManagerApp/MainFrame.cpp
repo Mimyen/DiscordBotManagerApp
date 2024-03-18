@@ -1,7 +1,7 @@
 #include "MainFrame.h"
 
 MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
-    : wxFrame(NULL, wxID_ANY, title, pos, size)
+    : wxFrame(NULL, wxID_ANY, title, pos, size), m_channelId(""), m_serverId("")
 {
     try {
         socketHandler = new SocketHandler(BOT_IP, BOT_PORT);
@@ -102,8 +102,8 @@ void MainFrame::SetupLoginPanel()
             std::vector<std::string> data;
             data.push_back(this->inputLogin->GetValue().ToStdString());
             data.push_back(this->inputPassword->GetValue().ToStdString());
-
-            if (this->socketHandler->Handle(authorize, data) == "false") {
+            std::vector<wxString> output = this->socketHandler->Handle(authorize, data);
+            if (output[0] == "false") {
                 wxMessageBox("Couldn't connect to the server!");
             }
             else {
@@ -261,10 +261,119 @@ void MainFrame::SetupMainPanel()
         wxDefaultPosition,
         wxDefaultSize,
         [this]() {
+
+            m_serverId = "";
+            m_channelId = "";
+
+            std::vector<wxString> output = this->socketHandler->Handle(getservers);
+
+            if (output[0] == "true") {
+                m_servers = std::vector<std::pair<wxString, wxString>>();
+
+                for (size_t i = 1; i < output.size(); i += 2) {
+                    m_servers.emplace_back(output[i], output[i + 1]);
+                }
+            }
+
+            std::vector<wxString> items;
+
+            for (auto& server : m_servers) {
+                items.emplace_back(server.second);
+            }
+
+            delete messageSubpanelServers;
+            delete messageSubpanelChannels;
+
+            messageSubpanelServers = new DropdownMenu(
+                mainPanelMessageSubpanel, 
+                wxID_ANY, 
+                wxPoint(50, 50), 
+                wxSize(200, 50), 
+                [this](wxString option) {
+                    m_channelId = "";
+
+                    for (auto& server : m_servers) {
+                        if (server.second == option) {
+                            m_serverId = server.first;
+
+                            if (messageSubpanelChannels->GetItems().size() != 0) {
+                                delete messageSubpanelChannels;
+
+                                messageSubpanelChannels = new DropdownMenu(
+                                    mainPanelMessageSubpanel,
+                                    wxID_ANY,
+                                    wxPoint(300, 50),
+                                    wxSize(200, 50),
+                                    [this](wxString option) {
+                                        for (auto& channel : m_channels) {
+                                            if (channel.second == option) {
+                                                m_channelId = channel.first;
+                                                break;
+                                            }
+                                        }
+                                    },
+                                    "Select Channel"
+                                );
+                            }
+
+                            std::vector<std::string> data;
+
+                            data.emplace_back(m_serverId.ToStdString());
+
+                            std::vector<wxString> output = this->socketHandler->Handle(getchannels, data);
+
+                            if (output[0] == "true") {
+                                m_channels = std::vector<std::pair<wxString, wxString>>();
+
+                                for (size_t i = 1; i < output.size(); i += 2) {
+                                    m_channels.emplace_back(output[i], output[i + 1]);
+                                }
+                            }
+
+                            std::vector<wxString> items;
+
+                            for (auto& channel : m_channels) {
+                                items.emplace_back(channel.second);
+                            }
+
+                            messageSubpanelChannels->SetItems(items);
+
+                            break;
+                        }
+                    }
+
+                    if (messageSubpanelChannels) messageSubpanelChannels->Resize(GetSize(), oldFrameSize);
+                },
+                "Select Server"
+            );
+
+            messageSubpanelChannels = new DropdownMenu(
+                mainPanelMessageSubpanel,
+                wxID_ANY,
+                wxPoint(300, 50),
+                wxSize(200, 50),
+                [this](wxString option) {
+                    for (auto& channel : m_channels) {
+                        if (channel.second == option) {
+                            m_channelId = channel.first;
+                            // wxLogDebug(channel.first + " " + channel.second);
+                            break;
+                        }
+                    }
+                },
+                "Select Channel"
+            );
+
+            if (messageSubpanelChannels) messageSubpanelChannels->Resize(GetSize(), oldFrameSize);
+            if (messageSubpanelServers) messageSubpanelServers->Resize(GetSize(), oldFrameSize);
+
+            messageSubpanelServers->SetItems(items);
+
             mainPanelHome->UnselectAll();
             mainPanelFunctions->UnselectAll();
             HideMainPanelSubpanels();
             mainPanelMessageSubpanel->Show();
+
             return true;
         },
         "Send Message",
@@ -290,6 +399,8 @@ void MainFrame::SetupMainPanel()
             mainPanelHomeSubpanel->Show();
             mainPanel->Hide();
             loginPanel->Show();
+            Layout();
+
             return false;
         },
         "Log Out",
@@ -333,6 +444,10 @@ void MainFrame::OnSize(wxSizeEvent& event)
     mainPanelFunctions->Resize(size, oldFrameSize);
     mainPanelHomeSubpanel->Resize(size, oldFrameSize);
     mainPanelMessageSubpanel->Resize(size, oldFrameSize);
+    messageSubpanelInput->Resize(size, oldFrameSize);
+    messageSubpanelSendButton->Resize(size, oldFrameSize);
+    if (messageSubpanelChannels) messageSubpanelChannels->Resize(size, oldFrameSize);
+    if (messageSubpanelServers) messageSubpanelServers->Resize(size, oldFrameSize);
 
     event.Skip();
 }
@@ -345,12 +460,58 @@ void MainFrame::HideMainPanelSubpanels()
 
 void MainFrame::SetupMessageSubpanel()
 {
-    RoundedButton* button = new RoundedButton(mainPanelMessageSubpanel, "Pawel kox", wxPoint(50, 50), wxSize(200, 50), []() { wxLogDebug("Pawel kox"); });
+    wxFont labelFont = light;
+    labelFont.SetPointSize(12);
+
+    messageSubpanelInput = new LabeledTextInputPanel(
+        mainPanelMessageSubpanel,
+        wxID_ANY,
+        "Message",
+        wxPoint(50, 200),
+        wxSize(300, 50),
+        wxTE_PROCESS_ENTER,
+        wxDefaultValidator,
+        "name",
+        messageSubpanelSendButton
+    );
+
+    messageSubpanelInput->SetFont(labelFont);
+    messageSubpanelInput->SetLabelFont(labelFont);
+
+    messageSubpanelSendButton = new RoundedButton(
+        mainPanelMessageSubpanel, 
+        "Send Message", 
+        wxPoint(400, 200), 
+        wxSize(200, 50),
+        [this]() {
+            if (m_serverId != "" && m_channelId != "") {
+                std::vector<std::string> data;
+
+                data.emplace_back(m_serverId.ToStdString());
+                data.emplace_back(m_channelId.ToStdString());
+                data.emplace_back(messageSubpanelInput->GetValue());
+
+                std::vector<wxString> output = this->socketHandler->Handle(sendmessage, data);
+
+                if (output[0] == "false") {
+                    wxLogDebug("Error");
+                }
+            }
+        }
+    );
+
+    messageSubpanelSendButton->SetFont(labelFont);
 }
 
 void MainFrame::SetupHomeSubpanel()
 {
-    RoundedButton* button = new RoundedButton(mainPanelHomeSubpanel, "Pawel cw3l", wxPoint(50, 50), wxSize(200, 50), []() { wxLogDebug("Pawel kox"); });
+    RoundedButton* button = new RoundedButton(mainPanelHomeSubpanel, "Pawel kox", wxPoint(50, 50), wxSize(200, 50), 
+        [this]() { 
+            for (auto& server : m_servers) {
+                wxLogDebug(server.first + wxString(" ") + server.second);
+            }
+        }
+    );
 }
 
 

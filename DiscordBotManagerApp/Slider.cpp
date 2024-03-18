@@ -17,8 +17,6 @@ void Slider::Resize(wxSize windowSize, wxSize defaultWindowSize)
 
 	// Set the new position and size for the object
 	SetSize(objectWidth, objectHeight, objectX, objectY);
-
-	Refresh();
 }
 
 bool Slider::SetBackgroundColour(const wxColour& colour)

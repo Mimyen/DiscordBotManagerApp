@@ -15,7 +15,7 @@ TextInput::TextInput(wxWindow* parent, wxWindowID id, const wxString& value, con
     SetForegroundColour(this->fgInactive);
 
     if (m_panel) {
-        m_panel->Bind(wxEVT_LEFT_DOWN, &TextInput::OnLeftDown, this);
+        m_panel->Bind(wxEVT_LEFT_UP, &TextInput::OnLeftDown, this);
     }
     
     this->style = GetWindowStyleFlag();
@@ -35,13 +35,10 @@ void TextInput::OnLeftDown(wxMouseEvent& event)
     // Check if the click occurred outside of the input control
     wxPoint pos = event.GetPosition();
     wxRect rect = GetScreenRect();
-    if (!rect.Contains(pos))
+    if (!rect.Contains(pos) && HasFocus())
     {
-        // Set focus to another window to ensure that the input control loses focus
-        if (m_parent)
-        {
-            m_parent->SetFocus();
-        }
+        Disable();
+        Enable();
     }
     event.Skip();
 }

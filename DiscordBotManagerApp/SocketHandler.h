@@ -4,7 +4,10 @@
 #include "libs/json.hpp"
 
 enum {
-	authorize = 0
+	authorize = 0,
+	getservers = 1,
+	getchannels = 2,
+	sendmessage = 3
 };
 
 #define CALL unsigned int
@@ -35,7 +38,7 @@ public:
 	/// <param name="callId">Id of the call that is being made</param>
 	/// <param name="data">data needed for the call</param>
 	/// <returns>Important information related to sent message</returns>
-	wxString Handle(CALL callId, std::vector<std::string> data = std::vector<std::string>());
+	std::vector<wxString> Handle(CALL callId, std::vector<std::string> data = std::vector<std::string>());
 
 private:
 	SOCKET clientSocket;

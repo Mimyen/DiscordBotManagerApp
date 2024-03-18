@@ -88,14 +88,14 @@ void ScrollPanel::OnPaint(wxPaintEvent& event) {
 
 void ScrollPanel::Render(wxDC& dc)
 {
+    // Get size of the element
+    wxSize size = GetClientSize();
+
     // Create a rounded rectangle bitmap and then a region from it
-    wxRegion roundedRectRegion = Utils::GetRoundedRegion(dc, GetClientSize(), 15); // Threshold near black to treat as transparent
+    wxRegion roundedRectRegion = Utils::GetRoundedRegion(dc, GetClientSize(), size.y / (m_scrollControls.size() >= 3 ? 12 : (m_scrollControls.size() == 2 ? 8 : 4))); // Threshold near black to treat as transparent
 
     // Create a memory DC with the same properties as the paint DC
     wxMemoryDC memDC;
-
-    // Get size of the element
-    wxSize size = GetClientSize();
 
     // Create a bitmap with higher resolution for antialiasing
     wxBitmap bmp = Utils::CreateEmptyBitmap(size);

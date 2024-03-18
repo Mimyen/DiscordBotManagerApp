@@ -6,7 +6,7 @@ void ScrollButton::Draw(wxGraphicsContext* gc)
     path.AddRectangle(m_position.x * 2, m_position.y * 2, m_size.x * 2, m_size.y * 2); // Corner radius
     gc->SetBrush(wxBrush(m_isHovered ? hoverColour : defaultColour)); // Button color
     gc->FillPath(path);
-    gc->SetFont(font, wxColour(255, 255, 255));
+    gc->SetFont(Utils::UpscaledFont(font), wxColour(255, 255, 255));
     wxDouble textWidth, textHeight, descent, externalLeading;
     gc->GetTextExtent(m_label, &textWidth, &textHeight, &descent, &externalLeading); // Measure text
 

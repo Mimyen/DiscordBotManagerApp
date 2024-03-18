@@ -29,7 +29,6 @@ LabeledTextInputPanel::LabeledTextInputPanel(wxWindow* parent, wxWindowID id, co
     m_label.SetBackgroundColour(bg);
     m_label.SetForegroundColour(fg);
 
-    
     m_textInput.Bind(wxEVT_SET_FOCUS, &LabeledTextInputPanel::OnSetFocus, this);
     m_textInput.Bind(wxEVT_KILL_FOCUS, &LabeledTextInputPanel::OnKillFocus, this);
     m_label.Bind(wxEVT_ENTER_WINDOW, &LabeledTextInputPanel::OnMouseEnterLabel, this);
@@ -213,39 +212,36 @@ void LabeledTextInputPanel::Resize(wxSize windowSize, wxSize defaultWindowSize)
 
     int textWidth, textHeight;
     GetTextExtent(
-        m_label.GetLabel(), 
-        &textWidth, 
-        &textHeight, 
-        (int*)0, 
-        (int*)0, 
+        m_label.GetLabel(),
+        &textWidth,
+        &textHeight,
+        (int*)0,
+        (int*)0,
         &font
     );
 
     m_label.SetSize(
-        10 * windowSize.y / defaultWindowSize.y, 
-        0, 
-        textWidth + 8, 
+        10 * windowSize.y / defaultWindowSize.y,
+        0,
+        textWidth + 8,
         textHeight
     );
 
     m_button.SetSize(
-        inputWidth - inputHeight - 3 + textHeight / 2, 
-        3 + textHeight / 2, 
-        inputHeight - 6 - textHeight / 2, 
+        inputWidth - inputHeight - 3 + textHeight / 2,
+        3 + textHeight / 2,
+        inputHeight - 6 - textHeight / 2,
         inputHeight - 6 - textHeight / 2
     );
 
     // Set the new position and size for the text input
     int charHeight = m_textInput.GetCharHeight();
     m_textInput.SetSize(
-        5, 
-        (inputHeight - charHeight + textHeight / 2) / 2, 
-        inputWidth - 10 - (m_isEncrypted ? m_button.GetSize().GetWidth() + 10 : 0), 
+        5,
+        (inputHeight - charHeight + textHeight / 2) / 2,
+        inputWidth - 10 - (m_isEncrypted ? m_button.GetSize().GetWidth() + 10 : 0),
         charHeight
     );
-
-    // Refresh the panel
-    Refresh();
 }
 
 void LabeledTextInputPanel::SetEncrypted(bool encrypted)

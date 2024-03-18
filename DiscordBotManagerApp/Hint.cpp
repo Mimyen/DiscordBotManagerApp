@@ -30,9 +30,7 @@ void Hint::Render(wxDC& dc)
         gc->SetBrush(wxBrush(wxColour(40, 40, 40)));
         gc->DrawRoundedRectangle(0, 0, size.x * 2, size.y * 2, 10);
 
-        wxFont font = GetFont();
-        font.SetPointSize(font.GetPointSize() * 2);
-        gc->SetFont(font, wxColour(255, 255, 255));
+        gc->SetFont(Utils::UpscaledFont(GetFont()), wxColour(255, 255, 255));
         wxDouble textWidth, textHeight, descent, externalLeading;
         gc->GetTextExtent(m_label, &textWidth, &textHeight, &descent, &externalLeading); // Measure text
 

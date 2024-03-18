@@ -21,7 +21,7 @@ public:
     /// <param name="selectedOption">Pointer to parent variable selectedOption.</param>
     /// <param name="callback">Function run to set selectedOption.</param>
     MenuPopup(wxWindow* parent, const wxSize& size, bool* open = nullptr, std::vector<wxString> options = std::vector<wxString>(), 
-        wxString* selectedOption = nullptr, ButtonCallback callback = [](wxString item = "") {});
+        wxString* selectedOption = nullptr, ButtonCallback callback = [](wxString item = "") {}, wxFont font = wxFont());
 
 private:
     /// <summary>

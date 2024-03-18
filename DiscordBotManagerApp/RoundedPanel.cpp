@@ -26,8 +26,6 @@ void RoundedPanel::Resize(wxSize windowSize, wxSize defaultWindowSize)
 
     // Set the new position and size for the object
     SetSize(objectWidth, objectHeight, objectX, objectY);
-
-    Refresh();
 }
 
 bool RoundedPanel::SetBackgroundColour(const wxColour& colour)

@@ -90,12 +90,6 @@ protected:
 	virtual void OnMouseLeftDown(wxMouseEvent& event);
 
 	/// <summary>
-	/// Function that is run whenever button is clicked (callback is being run).
-	/// </summary>
-	/// <param name="event">Event passed to the function.</param>
-	virtual void OnButtonClick(wxCommandEvent& event);
-
-	/// <summary>
 	/// Function that reduces the size of element.
 	/// </summary>
 	virtual void Reduce();
@@ -115,6 +109,7 @@ protected:
 	bool m_clicked;
 	bool m_hold;
 	bool drawOutline;
+	std::atomic<bool> m_callbackRunning;
 	wxColour colour;
 	wxColour clicked;
 	wxColour bg;

@@ -103,7 +103,14 @@ public:
 
 
     // mainPanel->MessageSubpanel
-
+    std::vector<std::pair<wxString, wxString>> m_servers;
+    std::vector<std::pair<wxString, wxString>> m_channels;
+    wxString m_serverId;
+    wxString m_channelId;
+    DropdownMenu* messageSubpanelServers;
+    DropdownMenu* messageSubpanelChannels;
+    RoundedButton* messageSubpanelSendButton;
+    LabeledTextInputPanel* messageSubpanelInput;
 
     DECLARE_EVENT_TABLE();
 };

@@ -1,12 +1,12 @@
 #include "DropdownMenu.h"
 
-DropdownMenu::DropdownMenu(wxWindow* parent, wxWindowID id, wxPoint pos, wxSize size, FunctionCallback callback)
+DropdownMenu::DropdownMenu(wxWindow* parent, wxWindowID id, wxPoint pos, wxSize size, FunctionCallback callback, wxString defaultLabel, wxFont font)
 	: wxPanel(parent, id, pos, size, wxTRANSPARENT_WINDOW), m_isMenuVisible(false),
-    defaultPos(pos), defaultSize(size), isOpen(false), selectedOption(""), m_callback(callback)
+    defaultPos(pos), defaultSize(size), isOpen(false), selectedOption(""), m_callback(callback), m_defaultLabel(defaultLabel), defaultFontSize(font.GetPointSize())
 {
     SetBackgroundStyle(wxBG_STYLE_PAINT);
     SetBackgroundColour(wxColour(18, 18, 18, 0));
-    SetFont(wxFont(24, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT));
+    SetFont(font);
 
     Bind(wxEVT_PAINT, &DropdownMenu::OnPaint, this);
     Bind(wxEVT_LEFT_DOWN, &DropdownMenu::OnMouseLeftDown, this);
@@ -21,6 +21,11 @@ void DropdownMenu::SetItems(const std::vector<wxString>& items)
 {
     m_items = items;
     Refresh();
+}
+
+std::vector<wxString> DropdownMenu::GetItems() const
+{
+    return m_items;
 }
 
 void DropdownMenu::Select(const wxString& item)
@@ -41,10 +46,12 @@ void DropdownMenu::Resize(wxSize windowSize, wxSize defaultWindowSize)
     int menuWidth = defaultPos.x * windowSize.x / defaultWindowSize.x;
     int menuHeight = defaultPos.y * windowSize.y / defaultWindowSize.y;
 
+    wxFont buffer = GetFont();
+    buffer.SetPointSize(windowSize.y / defaultWindowSize.y * defaultFontSize);
+    SetFont(buffer);
+
     // Set the new position and size for the menu
     SetSize(menuWidth, menuHeight, menuX, menuY);
-
-    Refresh();
 }
 
 void DropdownMenu::Render(wxDC& dc)
@@ -74,14 +81,14 @@ void DropdownMenu::Render(wxDC& dc)
         
         gc->SetBrush(wxBrush(wxColour(60, 60, 60, 255))); // Set alpha to 255 (opaque)
         gc->DrawRoundedRectangle(0, 0, size.x * 2, size.y * 2, size.y / 4);
-        gc->SetFont(GetFont(), wxColour(255, 255, 255));
+        gc->SetFont(Utils::UpscaledFont(GetFont()), wxColour(255, 255, 255));
         wxDouble textWidth, textHeight, descent, externalLeading;
-        gc->GetTextExtent(selectedOption.size() > 0 ? selectedOption : wxString("Select Option"), &textWidth, &textHeight, &descent, &externalLeading); // Measure text
+        gc->GetTextExtent(selectedOption.size() > 0 ? selectedOption : m_defaultLabel, &textWidth, &textHeight, &descent, &externalLeading); // Measure text
 
         wxDouble xPos = (size.x * 2 - textWidth) / 2; // Center horizontally
         wxDouble yPos = (size.y * 2 - textHeight) / 2; // Center vertically
 
-        gc->DrawText(selectedOption.size() > 0 ? selectedOption : wxString("Select Option"), xPos, yPos); // Draw centered text
+        gc->DrawText(selectedOption.size() > 0 ? selectedOption : m_defaultLabel, xPos, yPos); // Draw centered text
 
         gc->GetTextExtent(this->isOpen ? wxString("-") : wxString("+"), &textWidth, &textHeight, &descent, &externalLeading); // Measure text
 
@@ -112,16 +119,17 @@ void DropdownMenu::OnMouseLeftDown(wxMouseEvent& event)
     if (!isOpen) {
         // Create and display the custom popup window
         MenuPopup* popup = new MenuPopup(
-            this, 
-            GetSize(), 
-            &isOpen, 
-            m_items, 
-            &selectedOption, 
-            [this](wxString item) { 
-                this->Select(item); 
-                if (this->m_callback) 
-                    this->m_callback(this->selectedOption); 
-            }
+            this,
+            GetSize(),
+            &isOpen,
+            m_items,
+            &selectedOption,
+            [this](wxString item) {
+                this->Select(item);
+                if (this->m_callback)
+                    this->m_callback(this->selectedOption);
+            },
+            GetFont()
         );
 
         // Position the popup below the menu
@@ -134,4 +142,5 @@ void DropdownMenu::OnMouseLeftDown(wxMouseEvent& event)
         Refresh();
     }
     else isOpen = false;
+    
 }

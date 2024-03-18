@@ -16,8 +16,8 @@ public:
     /// <param name="size">Size of the popup.</param>
     /// <param name="label">Name of the button.</param>
     /// <param name="callback">Function run on press.</param>
-    ScrollButton(wxWindow* parent, wxPoint pos, wxSize size, const wxString& label, ButtonCallback callback = [](wxString item = "") {})
-        : ScrollControl(parent, pos, size), m_label(label), callback(callback) {}
+    ScrollButton(wxWindow* parent, wxPoint pos, wxSize size, const wxString& label, ButtonCallback callback = [](wxString item = "") {}, wxFont font = wxFont(12, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT))
+        : ScrollControl(parent, pos, size), m_label(label), callback(callback), font(font) {  }
 
     /// <summary>
     /// Repaints the button.
@@ -33,6 +33,6 @@ public:
 
 private:
     wxString m_label;
-    wxFont font = wxFont(24, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT);
+    wxFont font;
     ButtonCallback callback;
 };

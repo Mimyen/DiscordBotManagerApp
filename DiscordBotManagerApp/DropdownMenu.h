@@ -17,7 +17,7 @@ public:
 	/// <param name="id">Id of the object, useable for making calls.</param>
 	/// <param name="pos">Position where Image will be drawn.</param>
 	/// <param name="size">Size of the Image.</param>
-	DropdownMenu(wxWindow* parent, wxWindowID id = wxID_ANY, wxPoint pos = wxDefaultPosition, wxSize size = wxDefaultSize, FunctionCallback callback = [](wxString option = "") {});
+	DropdownMenu(wxWindow* parent, wxWindowID id = wxID_ANY, wxPoint pos = wxDefaultPosition, wxSize size = wxDefaultSize, FunctionCallback callback = [](wxString option = "") {}, wxString defaultLabel = "Select Option", wxFont font = wxFont(12, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_LIGHT));
 
 	/// <summary>
 	/// Adds item to menu.
@@ -32,6 +32,8 @@ public:
 	/// <param name="item">wxString representing the chosen item from the menu</param>
 	/// <returns></returns>
 	virtual void SetItems(const std::vector<wxString>& items);
+
+	virtual std::vector<wxString> GetItems() const;
 
 	/// <summary>
 	/// Select item from menu.
@@ -76,5 +78,7 @@ protected:
 	wxSize defaultSize;
 	wxPoint defaultPos;
 	wxString selectedOption;
+	wxString m_defaultLabel;
+	unsigned int defaultFontSize;
 };
 

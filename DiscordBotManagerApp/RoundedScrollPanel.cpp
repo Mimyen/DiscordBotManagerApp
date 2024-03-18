@@ -194,16 +194,14 @@ void RoundedScrollPanel::Resize(wxSize windowSize, wxSize defaultWindowSize)
     int objectWidth = defaultPos.x * windowSize.x / defaultWindowSize.x;
     int objectHeight = defaultPos.y * windowSize.y / defaultWindowSize.y;
 
-    // Set the new position and size for the object
-    SetSize(objectWidth, objectHeight, objectX, objectY);
-
     for (auto& control : m_scrollControls) {
         control->UpdateFontSize((double)windowSize.y / (double)defaultWindowSize.y);
     }
 
     RecalculateLayout();
 
-    Refresh();
+    // Set the new position and size for the object
+    SetSize(objectWidth, objectHeight, objectX, objectY);
 }
 
 BEGIN_EVENT_TABLE(RoundedScrollPanel, wxPanel)

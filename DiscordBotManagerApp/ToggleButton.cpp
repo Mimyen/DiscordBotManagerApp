@@ -32,8 +32,6 @@ void ToggleButton::Resize(wxSize windowSize, wxSize defaultWindowSize)
 
     // Set the new position and size for the button
     SetSize(buttonX, buttonY, buttonWidth, buttonHeight);
-
-    Refresh();
 }
 
 bool ToggleButton::GetState() const

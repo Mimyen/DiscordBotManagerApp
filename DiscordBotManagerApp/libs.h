@@ -24,6 +24,9 @@
 #include <fstream>
 #include <d2d1.h>
 #include <cmath>
+#include <thread>
+#include <chrono>
+#include <atomic>
 
 #pragma comment(lib, "dwmapi.lib")
 #pragma comment(lib, "ws2_32.lib")
