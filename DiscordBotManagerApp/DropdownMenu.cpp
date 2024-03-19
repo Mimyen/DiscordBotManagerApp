@@ -47,9 +47,10 @@ void DropdownMenu::Resize(wxSize windowSize, wxSize defaultWindowSize)
     int menuHeight = defaultPos.y * windowSize.y / defaultWindowSize.y;
 
     wxFont buffer = GetFont();
-    buffer.SetPointSize(windowSize.y / defaultWindowSize.y * defaultFontSize);
+    double b = (double)windowSize.y / (double)defaultWindowSize.y * (double)defaultFontSize;
+    buffer.SetPointSize(b);
     SetFont(buffer);
-
+    LDC(buffer.GetPointSize());
     // Set the new position and size for the menu
     SetSize(menuWidth, menuHeight, menuX, menuY);
 }

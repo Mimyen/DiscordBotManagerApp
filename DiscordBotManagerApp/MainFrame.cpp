@@ -288,7 +288,7 @@ void MainFrame::SetupMainPanel()
                 mainPanelMessageSubpanel, 
                 wxID_ANY, 
                 wxPoint(50, 50), 
-                wxSize(200, 50), 
+                wxSize(300, 50), 
                 [this](wxString option) {
                     m_channelId = "";
 
@@ -302,8 +302,8 @@ void MainFrame::SetupMainPanel()
                                 messageSubpanelChannels = new DropdownMenu(
                                     mainPanelMessageSubpanel,
                                     wxID_ANY,
-                                    wxPoint(300, 50),
-                                    wxSize(200, 50),
+                                    wxPoint(400, 50),
+                                    wxSize(300, 50),
                                     [this](wxString option) {
                                         for (auto& channel : m_channels) {
                                             if (channel.second == option) {
@@ -350,8 +350,8 @@ void MainFrame::SetupMainPanel()
             messageSubpanelChannels = new DropdownMenu(
                 mainPanelMessageSubpanel,
                 wxID_ANY,
-                wxPoint(300, 50),
-                wxSize(200, 50),
+                wxPoint(400, 50),
+                wxSize(300, 50),
                 [this](wxString option) {
                     for (auto& channel : m_channels) {
                         if (channel.second == option) {
@@ -496,11 +496,49 @@ void MainFrame::SetupMessageSubpanel()
                 if (output[0] == "false") {
                     wxLogDebug("Error");
                 }
+                else if (output[0] == wxString("true")) {
+                    messageSubpanelInput->SetValue("");
+                    messageSubpanelInput->Refresh();
+                }
             }
         }
     );
 
-    messageSubpanelSendButton->SetFont(labelFont);
+    messageSubpanelEmbedToggle = new ToggleButton(
+        mainPanelMessageSubpanel,
+        wxID_ANY,
+        wxPoint(50, 120),
+        wxSize(40, 20),
+        [this](bool flag = true) {
+        
+        }
+    );
+    messageSubpanelEmbedLabel = new Label(
+        mainPanelMessageSubpanel,
+        wxID_ANY,
+        "Embed Format",
+        wxPoint(95, 122),
+        wxSize(110, 18)
+    );
+
+    messageSubpanelEmbedLabel->SetForegroundColour(wxColour(255, 255, 255));
+    messageSubpanelEmbedLabel->SetBackgroundColour(wxColour(18, 18, 18));
+    messageSubpanelEmbedLabel->SetFont(labelFont);
+    
+    wxFont titleFont = bold;
+    titleFont.SetPointSize(24);
+
+    messageSubpanelLabel = new Label(
+        mainPanelMessageSubpanel,
+        wxID_ANY,
+        "Send Message Function",
+        wxPoint(50, 10),
+        wxSize(110, 50)
+    );
+
+    messageSubpanelLabel->SetForegroundColour(wxColour(255, 255, 255));
+    messageSubpanelLabel->SetBackgroundColour(wxColour(18, 18, 18));
+    messageSubpanelLabel->SetFont(titleFont);
 }
 
 void MainFrame::SetupHomeSubpanel()

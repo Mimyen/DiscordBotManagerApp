@@ -111,6 +111,9 @@ public:
     DropdownMenu* messageSubpanelChannels;
     RoundedButton* messageSubpanelSendButton;
     LabeledTextInputPanel* messageSubpanelInput;
+    ToggleButton* messageSubpanelEmbedToggle;
+    Label* messageSubpanelEmbedLabel;
+    Label* messageSubpanelLabel;
 
     DECLARE_EVENT_TABLE();
 };

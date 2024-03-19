@@ -134,6 +134,11 @@ void TextInput::Value(wxString value)
         SetForegroundColour(fg);
         SetValue(value);
     }
+    else if (value == "") {
+        SetValue(defaultValue);
+        SetForegroundColour(fgInactive);
+        parent->Refresh();
+    }
     Refresh();
 }
 
