@@ -18,8 +18,9 @@ public:
 	/// <param name="id">Id of the object, useable for making calls.</param>
 	/// <param name="input">Pointer to TextInput element related to button.</param>
 	/// <param name="bg">Color of the background.</param>
-	TextInputSHButton(wxWindow* parent, wxWindowID id = wxID_ANY, TextInput* input = nullptr, wxColour bg = wxColour(18, 18, 18));
+	TextInputSHButton(wxWindow* parent, wxWindowID id = wxID_ANY, TextInput* input = nullptr);
 
+	virtual bool SetBackgroundColour(const wxColour& colour);
 protected:
 	/// <summary>
 	/// Repaints the window.

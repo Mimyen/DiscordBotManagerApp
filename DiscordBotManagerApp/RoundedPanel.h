@@ -1,5 +1,5 @@
 #pragma once
-#include "libs.h"
+#include "Utils.h"
 
 /// <summary>
 /// This class creates a panel that has background that is rounded rectangle.
@@ -29,6 +29,10 @@ public:
     virtual bool SetBackgroundColour(const wxColour& colour);
     virtual bool SetForegroundColour(const wxColour& colour);
     virtual void SetRect(wxPoint pos, wxSize size);
+
+    void AddChildWidget(wxWindow* child) {
+        childWidgets.push_back(child);
+    }
 
 protected:
     /// <summary>
@@ -61,13 +65,15 @@ protected:
     /// <param name="event">Event passed to the function.</param>
     virtual void OnSetFocus(wxFocusEvent& event);
     
+    virtual void OnNavigationKeyPress(wxNavigationKeyEvent& event);
+
     wxColour bg;
     wxColour fg;
     unsigned int offsetXT; 
     unsigned int offsetYT; 
     unsigned int offsetXB; 
     unsigned int offsetYB;
-
+    std::vector<wxWindow*> childWidgets;
     wxSize defaultSize;
     wxPoint defaultPos;
 

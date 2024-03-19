@@ -12,6 +12,7 @@ MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
     }
 
     Bind(wxEVT_SIZE, &MainFrame::OnSize, this);
+    Bind(wxEVT_LEFT_DOWN, [this](wxMouseEvent& event) {});
     oldFrameSize = size;
 
     // Loading fonts
@@ -132,10 +133,14 @@ void MainFrame::SetupLoginPanel()
         "Username", 
         wxPoint(175, 190), 
         wxSize(300, 50), 
-        wxTE_PROCESS_ENTER, 
-        wxDefaultValidator, 
-        "name", 
-        button
+        wxTE_PROCESS_ENTER,
+        [](wxString value) {
+
+        },
+        [this](wxString value) {
+            inputPassword->SetFocus();
+            inputPassword->m_textInput.SetInsertionPointEnd();
+        }
     );
 
     inputLogin->SetFont(tipFont);
@@ -147,10 +152,34 @@ void MainFrame::SetupLoginPanel()
         "Password", 
         wxPoint(175, 250), 
         wxSize(300, 50), 
-        wxTE_PROCESS_ENTER, 
-        wxDefaultValidator, 
-        "name", 
-        button
+        wxTE_PROCESS_ENTER,
+        [](wxString value) {
+
+        },
+        [this](wxString value) {
+            std::vector<std::string> data;
+            data.push_back(this->inputLogin->GetValue().ToStdString());
+            data.push_back(value.ToStdString());
+            std::vector<wxString> output = this->socketHandler->Handle(authorize, data);
+            if (output[0] == "false") {
+                wxMessageBox("Couldn't connect to the server!");
+            }
+            else {
+                this->loginPanel->Hide();
+                this->mainPanel->Show();
+                this->Layout();
+
+                std::fstream loginData;
+                loginData.open("loginData", std::ios::out | std::ios::trunc);
+
+                if (this->leftPanelToggle->GetState()) {
+                    loginData << "true\n";
+                    loginData << this->inputLogin->GetValue() << '\n';
+                    loginData << this->inputPassword->GetValue();
+                }
+                else loginData << "false";
+            }
+        }
     );
 
     inputPassword->SetEncrypted(true);
@@ -471,12 +500,9 @@ void MainFrame::SetupMessageSubpanel()
         "Message",
         wxPoint(50, 200),
         wxSize(300, 50),
-        wxTE_PROCESS_ENTER,
-        wxDefaultValidator,
-        "name",
-        messageSubpanelSendButton
+        wxTE_PROCESS_ENTER
     );
-
+    mainPanelMessageSubpanel->AddChildWidget(messageSubpanelInput);
     messageSubpanelInput->SetFont(labelFont);
     messageSubpanelInput->SetLabelFont(labelFont);
 
@@ -486,12 +512,10 @@ void MainFrame::SetupMessageSubpanel()
         "Author Name",
         wxPoint(50, 300),
         wxSize(300, 50),
-        wxTE_PROCESS_ENTER,
-        wxDefaultValidator,
-        "name",
-        messageSubpanelSendButton
+        wxTE_PROCESS_ENTER
     );
 
+    mainPanelMessageSubpanel->AddChildWidget(messageSubpanelAuthorName);
     messageSubpanelAuthorName->SetFont(labelFont);
     messageSubpanelAuthorName->SetLabelFont(labelFont);
 
@@ -502,18 +526,22 @@ void MainFrame::SetupMessageSubpanel()
         wxPoint(400, 300),
         wxSize(300, 50),
         wxTE_PROCESS_ENTER,
-        wxDefaultValidator,
-        "name",
-        messageSubpanelSendButton
+        [this](wxString value) {
+            wxLogDebug(value);
+        },
+        [this](wxString value) {
+            wxLogDebug(value);
+        }
     );
 
+    mainPanelMessageSubpanel->AddChildWidget(messageSubpanelAuthorIcon);
     messageSubpanelAuthorIcon->SetFont(labelFont);
     messageSubpanelAuthorIcon->SetLabelFont(labelFont);
 
     messageSubpanelSendButton = new RoundedButton(
         mainPanelMessageSubpanel, 
         "Send Message", 
-        wxPoint(400, 200), 
+        wxPoint(400, 500), 
         wxSize(200, 50),
         [this]() {
             if (m_serverId != "" && m_channelId != "") {

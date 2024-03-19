@@ -1,33 +1,32 @@
 #include "LabeledTextInputPanel.h"
 
-LabeledTextInputPanel::LabeledTextInputPanel(wxWindow* parent, wxWindowID id, const wxString& value,
-    const wxPoint& pos, const wxSize& size, long style, const wxValidator& validator, const wxString& name,
-    wxWindow* m_parent, wxColour bg, wxColour fg, wxColour outline, wxColour outlineInactive)
-    : wxPanel(parent, id, pos, size, style, name), m_textInput(this, wxID_ANY, value, wxDefaultPosition, wxDefaultSize, style, validator, wxTextCtrlNameStr, m_parent, parent),
-    m_isEncrypted(false), m_isHovered(false), m_button(this, wxID_ANY, &m_textInput, bg), m_label(this, wxID_ANY, value, wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER_HORIZONTAL), 
+LabeledTextInputPanel::LabeledTextInputPanel(wxWindow* parent, wxWindowID id, const wxString& value, const wxPoint& pos, 
+    const wxSize& size, long style, Callback onTextChange, Callback onEnter)
+    : wxPanel(parent, id, pos, size, style), m_textInput(this, wxID_ANY, value, wxDefaultPosition, wxDefaultSize, style, onTextChange, onEnter),
+    m_isEncrypted(false), m_isHovered(false), m_button(this, wxID_ANY, &m_textInput), m_label(this, wxID_ANY, value, wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER_HORIZONTAL),
     m_isEmpty(true), m_hoveredChild(false)
 {
     // Set background color of the panel
     SetBackgroundStyle(wxBG_STYLE_PAINT);
-    SetBackgroundColour(bg);
-
-    // Set text colors
-    m_textInput.SetColors(fg, bg, outlineInactive);
 
     // Set variables
-    this->bg = bg;
-    this->fg = fg;
-    this->outline = outline;
-    this->outlineInactive = outlineInactive;
+    this->bg = wxColour(18, 18, 18);
+    this->fg = wxColour(255, 255, 255);
+    this->outline = wxColour(255, 255, 255);
+    this->outlineInactive = wxColour(114, 114, 114);
     this->fontDefaultSize = m_textInput.GetFont().GetPointSize();
     this->labelFontDefaultSize = m_label.GetFont().GetPointSize();
     this->defaultPos = pos;
     this->defaultSize = size;
 
+    // Set text colors
+    m_textInput.SetColors(fg, bg, outlineInactive);
+
     // Setting up the label
     m_label.Show(!m_isEmpty);
     m_label.SetBackgroundColour(bg);
     m_label.SetForegroundColour(fg);
+    SetBackgroundColour(bg);
 
     m_textInput.Bind(wxEVT_SET_FOCUS, &LabeledTextInputPanel::OnSetFocus, this);
     m_textInput.Bind(wxEVT_KILL_FOCUS, &LabeledTextInputPanel::OnKillFocus, this);
@@ -36,7 +35,8 @@ LabeledTextInputPanel::LabeledTextInputPanel(wxWindow* parent, wxWindowID id, co
     Bind(wxEVT_PAINT, &LabeledTextInputPanel::OnPaint, this);
     Bind(wxEVT_ENTER_WINDOW, &LabeledTextInputPanel::OnMouseEnter, this);
     Bind(wxEVT_LEAVE_WINDOW, &LabeledTextInputPanel::OnMouseLeave, this);
-
+    Bind(wxEVT_LEFT_DOWN, &LabeledTextInputPanel::OnMouseLeftDown, this);
+    Bind(wxEVT_NAVIGATION_KEY, &LabeledTextInputPanel::OnNavigationKeyPress, this);
     //
     m_button.Hide();
 }
@@ -92,6 +92,9 @@ void LabeledTextInputPanel::Render(wxDC& dc)
 
     // Draw the bitmap on the device context
     dc.Clear();
+    dc.SetBrush(wxBrush(bg));
+    dc.SetPen(*wxTRANSPARENT_PEN);
+    dc.DrawRectangle(0, 0, size.x, size.y);
     dc.DrawBitmap(finalBmp, 0, 0, true);
 
     m_label.Refresh();
@@ -185,6 +188,26 @@ void LabeledTextInputPanel::OnMouseLeaveLabel(wxMouseEvent& event)
     event.Skip();
 }
 
+void LabeledTextInputPanel::OnMouseLeftDown(wxMouseEvent& event)
+{
+    // Explicitly set focus to the TextInput only if the mouse is clicked
+    // within the TextInput bounds or a specific area you designate as focusable.
+    wxRect textInputRect = m_textInput.GetRect();
+    if (textInputRect.Contains(event.GetPosition())) {
+        m_textInput.SetFocus();
+    }
+    else {
+        // This prevents the panel or its children from taking focus away when clicked outside
+        // but allows the event to propagate up for other uses (if not needed, you can remove event.Skip()).
+        
+    }
+}
+
+void LabeledTextInputPanel::OnNavigationKeyPress(wxNavigationKeyEvent& event)
+{
+    if (event.IsFromTab()) event.Skip();
+}
+
 void LabeledTextInputPanel::Resize(wxSize windowSize, wxSize defaultWindowSize)
 {
     // Calculate the new width and height for the panel
@@ -274,4 +297,24 @@ void LabeledTextInputPanel::SetLabelFont(wxFont font)
     m_label.SetFont(font);
     labelFontDefaultSize = font.GetPointSize();
     Refresh();
+}
+
+bool LabeledTextInputPanel::SetBackgroundColour(const wxColour& bg)
+{
+    return false;
+}
+
+bool LabeledTextInputPanel::SetForegroundColour(const wxColour& bg)
+{
+    return false;
+}
+
+bool LabeledTextInputPanel::SetOutlineColour(const wxColour& bg)
+{
+    return false;
+}
+
+bool LabeledTextInputPanel::SetInactiveOutlineColour(const wxColour& bg)
+{
+    return false;
 }

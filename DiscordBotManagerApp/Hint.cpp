@@ -36,7 +36,7 @@ void Hint::Render(wxDC& dc)
 
         wxDouble xPos = (size.x * 2 - textWidth) / 2; // Center horizontally
         wxDouble yPos = (size.y * 2 - textHeight) / 2; // Center vertically
-
+      
         gc->DrawText(m_label, xPos, yPos); // Draw centered text
         delete gc;
     }

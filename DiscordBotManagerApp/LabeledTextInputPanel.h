@@ -12,6 +12,8 @@
 class LabeledTextInputPanel : public wxPanel
 {
 public:
+    using Callback = std::function<void(wxString value)>;
+
     /// <summary>
     /// Constructor for LabaledTextInputPanel class.
     /// </summary>
@@ -30,9 +32,8 @@ public:
     /// <param name="outlineInactive">Color of the inactive outline.</param>
     LabeledTextInputPanel(wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& value = wxEmptyString,
         const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize,
-        long style = wxTE_PROCESS_ENTER, const wxValidator& validator = wxDefaultValidator,
-        const wxString& name = wxTextCtrlNameStr, wxWindow* m_parent = nullptr,
-        wxColour bg = wxColour(18, 18, 18), wxColour fg = wxColour(255, 255, 255), wxColour outline = wxColour(255, 255, 255), wxColour outlineInactive = wxColour(114, 114, 114));
+        long style = wxTE_PROCESS_ENTER,
+        Callback onTextChange = [](wxString value = "") {}, Callback onEnter = [](wxString value = "") {});
 
     /// <summary>
     /// Resizes the window in relation to window size.
@@ -71,6 +72,12 @@ public:
     /// <param name="font">Font that will be set.</param>
     virtual void SetLabelFont(wxFont font);
 
+    virtual bool SetBackgroundColour(const wxColour& bg);
+    virtual bool SetForegroundColour(const wxColour& bg);
+    virtual bool SetOutlineColour(const wxColour& bg);
+    virtual bool SetInactiveOutlineColour(const wxColour& bg);
+
+    TextInput m_textInput;
 protected:
     /// <summary>
     /// Inner function that draws the element.
@@ -120,8 +127,12 @@ protected:
     /// <param name="event">Event passed to the function.</param>
     virtual void OnMouseLeaveLabel(wxMouseEvent& event);
 
+
+    virtual void OnMouseLeftDown(wxMouseEvent& event);
+
+    virtual void OnNavigationKeyPress(wxNavigationKeyEvent& event);
+
     Label m_label;
-    TextInput m_textInput;
     TextInputSHButton m_button;
     wxColour fg;
     wxColour bg;

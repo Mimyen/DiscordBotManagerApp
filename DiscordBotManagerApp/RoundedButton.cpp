@@ -11,6 +11,7 @@ RoundedButton::RoundedButton(wxWindow* parent, const wxString& label, const wxPo
     Bind(wxEVT_LEFT_DOWN, &RoundedButton::OnMouseLeftDown, this);
     Bind(wxEVT_ENTER_WINDOW, &RoundedButton::OnMouseEnter, this);
     Bind(wxEVT_LEAVE_WINDOW, &RoundedButton::OnMouseLeave, this);
+    
 
     // Set variables
     this->colour = wxColour(26, 188, 156);

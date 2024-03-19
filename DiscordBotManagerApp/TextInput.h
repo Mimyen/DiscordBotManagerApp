@@ -9,6 +9,8 @@
 class TextInput : public wxTextCtrl
 {
 public:
+    using Callback = std::function<void(wxString value)>;
+
     /// <summary>
     /// Constructor for TextInput class.
     /// </summary>
@@ -24,8 +26,8 @@ public:
     /// <param name="m_panel">Object that will be tracked.</param>
     TextInput(wxWindow* parent, wxWindowID id, const wxString& value = wxEmptyString,
         const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize,
-        long style = wxTE_PROCESS_ENTER, const wxValidator& validator = wxDefaultValidator,
-        const wxString& name = wxTextCtrlNameStr, wxWindow* m_parent = nullptr, wxWindow* m_panel = nullptr);
+        long style = wxTE_PROCESS_ENTER,
+        Callback onTextChange = [](wxString value = "") {}, Callback onEnter = [](wxString value = "") {});
 
     /// <summary>
     /// Setter function for colors.
@@ -86,8 +88,8 @@ protected:
     /// <returns>Rect of the component</returns>
     virtual wxRect GetScreenRect() const;
 
-    wxWindow* m_parent;
-    wxWindow* parent;
+    virtual void OnEnterPressed(wxCommandEvent& event);
+
     wxString defaultValue;
     wxString value;
     wxColour fg;
@@ -95,5 +97,7 @@ protected:
     wxColour bg;
     bool m_hasFocus;
     long style;
+    Callback m_onTextChange;
+    Callback m_onEnter;
 };
 

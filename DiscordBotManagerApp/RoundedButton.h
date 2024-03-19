@@ -89,6 +89,8 @@ protected:
 	/// <param name="event">Event passed to the function.</param>
 	virtual void OnMouseLeftDown(wxMouseEvent& event);
 
+	
+
 	/// <summary>
 	/// Function that reduces the size of element.
 	/// </summary>

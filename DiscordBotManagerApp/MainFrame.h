@@ -4,7 +4,6 @@
 #include "SocketHandler.h"
 #include "RoundedPanel.h"
 #include "RoundedButton.h"
-#include "TextInputPanel.h"
 #include "LabeledTextInputPanel.h"
 #include "Label.h"
 #include "RectangleObj.h"

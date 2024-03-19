@@ -48,9 +48,6 @@
     <ClCompile Include="TextInput.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TextInputPanel.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="TextInputSHButton.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -117,9 +114,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TextInput.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TextInputPanel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TextInputSHButton.h">

@@ -12,7 +12,8 @@ ScrollPanel::ScrollPanel(wxWindow* parent, const wxPoint& pos, const wxSize& siz
     scrollBarRect = wxRect(size.x - 10 - 2, 2, 10, size.y);
 }
 
-void ScrollPanel::OnScroll(wxMouseEvent& event) {
+void ScrollPanel::OnScroll(wxMouseEvent& event) 
+{
     int rotation = event.GetWheelRotation();
     int lineHeight = 20; // Adjust as needed for your scroll speed
 
@@ -23,7 +24,8 @@ void ScrollPanel::OnScroll(wxMouseEvent& event) {
     RecalculateLayout(); // Re-layout controls based on new scroll position
 }
 
-void ScrollPanel::OnSize(wxSizeEvent& event) {
+void ScrollPanel::OnSize(wxSizeEvent& event) 
+{
     RecalculateLayout();
     event.Skip(); // Ensure the event is not blocked
 }
@@ -49,7 +51,8 @@ void ScrollPanel::RecalculateLayout() {
     Refresh(); // Redraw to apply layout changes
 }
 
-void ScrollPanel::OnLeftUp(wxMouseEvent& event) {
+void ScrollPanel::OnLeftUp(wxMouseEvent& event) 
+{
     wxPoint clickPos = event.GetPosition();
 
     if (m_isDragging) {
@@ -73,12 +76,13 @@ void ScrollPanel::OnLeftUp(wxMouseEvent& event) {
 }
 
 
-void ScrollPanel::OnEraseBackground(wxEraseEvent& event) {
-    // Do nothing here. This prevents the background from being erased
-    // and reduces flickering.
+void ScrollPanel::OnEraseBackground(wxEraseEvent& event) 
+{
+
 }
 
-void ScrollPanel::OnPaint(wxPaintEvent& event) {
+void ScrollPanel::OnPaint(wxPaintEvent& event) 
+{
     wxPaintDC dc(this);
     PrepareDC(dc);
     Render(dc);
@@ -149,15 +153,18 @@ void ScrollPanel::SetFocus()
 {
 }
 
-void ScrollPanel::OnSetFocus(wxFocusEvent& event) {
+void ScrollPanel::OnSetFocus(wxFocusEvent& event) 
+{
     // Intentionally empty to avoid gaining focus
 }
 
-void ScrollPanel::OnKillFocus(wxFocusEvent& event) {
+void ScrollPanel::OnKillFocus(wxFocusEvent& event) 
+{
     // Intentionally empty to avoid focus-related issues
 }
 
-void ScrollPanel::OnLeftDown(wxMouseEvent& event) {
+void ScrollPanel::OnLeftDown(wxMouseEvent& event) 
+{
     wxPoint pos = event.GetPosition();
     if (scrollBarRect.Contains(pos)) {
         m_isDragging = true;

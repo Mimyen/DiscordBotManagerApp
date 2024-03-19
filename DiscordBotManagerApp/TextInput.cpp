@@ -1,8 +1,8 @@
 #include "TextInput.h"
 
 TextInput::TextInput(wxWindow* parent, wxWindowID id, const wxString& value, const wxPoint& pos, const wxSize& size,
-    long style, const wxValidator& validator, const wxString& name, wxWindow* m_parent, wxWindow* m_panel)
-    : wxTextCtrl(parent, id, "", pos, size, style | wxBORDER_NONE, validator, name), m_parent(m_parent), m_hasFocus(false), parent(parent)
+    long style, Callback onTextChange, Callback onEnter)
+    : wxTextCtrl(parent, id, "", pos, size, style | wxBORDER_NONE), m_hasFocus(false), m_onTextChange(onTextChange), m_onEnter(onEnter)
 {
     this->fg = wxColour(255, 255, 255);
     this->fgInactive = wxColour(114, 114, 114);
@@ -14,9 +14,8 @@ TextInput::TextInput(wxWindow* parent, wxWindowID id, const wxString& value, con
     // Set text color
     SetForegroundColour(this->fgInactive);
 
-    if (m_panel) {
-        m_panel->Bind(wxEVT_LEFT_UP, &TextInput::OnLeftDown, this);
-    }
+    GetParent()->GetParent()->Bind(wxEVT_LEFT_DOWN, &TextInput::OnLeftDown, this);
+    GetParent()->Bind(wxEVT_LEFT_UP, [this](wxMouseEvent& event) { this->SetFocus(); });
     
     this->style = GetWindowStyleFlag();
     this->value = "";
@@ -28,6 +27,7 @@ TextInput::TextInput(wxWindow* parent, wxWindowID id, const wxString& value, con
     Bind(wxEVT_SET_FOCUS, &TextInput::OnSetFocus, this);
     Bind(wxEVT_KILL_FOCUS, &TextInput::OnKillFocus, this);
     Bind(wxEVT_TEXT, &TextInput::OnTextChange, this);
+    Bind(wxEVT_TEXT_ENTER, &TextInput::OnEnterPressed, this);
 }
 
 void TextInput::OnLeftDown(wxMouseEvent& event)
@@ -37,7 +37,6 @@ void TextInput::OnLeftDown(wxMouseEvent& event)
     wxRect rect = GetScreenRect();
     if (!rect.Contains(pos) && HasFocus())
     {
-        if (m_parent) m_parent->SetFocus();
         Disable();
         Enable();
     }
@@ -49,6 +48,11 @@ wxRect TextInput::GetScreenRect() const
     wxRect rect = GetRect();
     ClientToScreen(&rect.x, &rect.y);
     return rect;
+}
+
+void TextInput::OnEnterPressed(wxCommandEvent& event)
+{
+    if (m_onEnter) m_onEnter(value);
 }
 
 void TextInput::OnTextChange(wxCommandEvent& event)
@@ -109,6 +113,8 @@ void TextInput::OnTextChange(wxCommandEvent& event)
     /*if (!value.empty()) {
         wxLogDebug(value);
     }*/
+
+    if (m_onTextChange) m_onTextChange(value);
 }
 
 void TextInput::SetEncrypted(bool encrypted)
@@ -138,7 +144,7 @@ void TextInput::Value(wxString value)
     else if (value == "") {
         SetValue(defaultValue);
         SetForegroundColour(fgInactive);
-        parent->Refresh();
+        GetParent()->Refresh();
     }
     Refresh();
 }
@@ -157,6 +163,7 @@ void TextInput::OnSetFocus(wxFocusEvent& event)
         SetValue(value);
         SetForegroundColour(fg);
     }
+    GetParent()->Refresh();
     event.Skip();
 }
 
@@ -166,9 +173,8 @@ void TextInput::OnKillFocus(wxFocusEvent& event)
     if (this->value.size() == 0) {
         SetValue(defaultValue);
         SetForegroundColour(fgInactive);
-        parent->Refresh();
     }
-    //Refresh();
+    GetParent()->Refresh();
     event.Skip();
 }
 

@@ -1,7 +1,7 @@
 #include "TextInputSHButton.h"
 
-TextInputSHButton::TextInputSHButton(wxWindow* parent, wxWindowID id, TextInput* input, wxColour bg)
-	: wxPanel(parent, id), isShown(false), isHovered(false), isPressed(false), m_input(input), bg(bg)
+TextInputSHButton::TextInputSHButton(wxWindow* parent, wxWindowID id, TextInput* input)
+	: wxPanel(parent, id), isShown(false), isHovered(false), isPressed(false), m_input(input), bg(wxColour(18, 18, 18))
 {
     wxInitAllImageHandlers();
 
@@ -23,6 +23,11 @@ TextInputSHButton::TextInputSHButton(wxWindow* parent, wxWindowID id, TextInput*
     Bind(wxEVT_LEFT_DOWN, &TextInputSHButton::OnMouseLeftDown, this);
     Bind(wxEVT_ENTER_WINDOW, &TextInputSHButton::OnMouseEnter, this);
     Bind(wxEVT_LEAVE_WINDOW, &TextInputSHButton::OnMouseLeave, this);
+}
+
+bool TextInputSHButton::SetBackgroundColour(const wxColour& colour)
+{
+    return false;
 }
 
 void TextInputSHButton::OnPaint(wxPaintEvent& event)

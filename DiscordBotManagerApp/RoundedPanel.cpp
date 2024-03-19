@@ -4,8 +4,6 @@ RoundedPanel::RoundedPanel(wxWindow* parent, wxWindowID id, unsigned int offsetX
 {
 
     SetBackgroundStyle(wxBG_STYLE_PAINT);
-    // Bind resizing event
-    Bind(wxEVT_SIZE, &RoundedPanel::OnSize, this);
 
     // Set variables
     this->bg = wxColour(0, 0, 0);
@@ -98,8 +96,15 @@ void RoundedPanel::OnSetFocus(wxFocusEvent& event)
 {
 }
 
+void RoundedPanel::OnNavigationKeyPress(wxNavigationKeyEvent& event)
+{
+    if (event.IsFromTab()) event.Skip();
+}
+
 wxBEGIN_EVENT_TABLE(RoundedPanel, wxPanel)
     EVT_PAINT(RoundedPanel::OnPaint)
     EVT_LEFT_DOWN(RoundedPanel::OnLeftDown)
     EVT_SET_FOCUS(RoundedPanel::OnSetFocus)
+    EVT_NAVIGATION_KEY(RoundedPanel::OnNavigationKeyPress)
+    EVT_SIZE(RoundedPanel::OnSize)
 wxEND_EVENT_TABLE()

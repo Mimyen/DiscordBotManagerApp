@@ -6,9 +6,6 @@
 #define TITLE "Mimyen Bot Manager Application"
 #define SIZE wxSize(1280, 672)
 
-#define WINVER 0x0601
-#define _WIN32_WINNT 0x0601
-
 /// <summary>
 /// This class initializes the window.
 /// </summary>
