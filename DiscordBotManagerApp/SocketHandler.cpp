@@ -155,6 +155,17 @@ std::vector<wxString> SocketHandler::Handle(CALL callId, std::vector<std::string
         bufferMessage["channel_id"] = data[1];
         bufferMessage["input"] = data[2];
 
+        if (data.size() > 3) bufferMessage["embedded"] = data[3];
+        if (data.size() > 4) {
+            bufferMessage["color"]["r"] = data[4];
+            bufferMessage["color"]["g"] = data[5];
+            bufferMessage["color"]["b"] = data[6];
+        }
+        if (data.size() > 7) {
+            bufferMessage["author"] = data[7];
+            bufferMessage["icon"] = data[8];
+        }
+
         message = bufferMessage.dump();
         wxLogDebug(message.c_str());
 

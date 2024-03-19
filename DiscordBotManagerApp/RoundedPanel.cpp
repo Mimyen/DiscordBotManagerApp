@@ -89,6 +89,17 @@ void RoundedPanel::OnSize(wxSizeEvent& event)
     event.Skip();
 }
 
+void RoundedPanel::OnLeftDown(wxMouseEvent& event)
+{
+
+}
+
+void RoundedPanel::OnSetFocus(wxFocusEvent& event)
+{
+}
+
 wxBEGIN_EVENT_TABLE(RoundedPanel, wxPanel)
-EVT_PAINT(RoundedPanel::OnPaint)
+    EVT_PAINT(RoundedPanel::OnPaint)
+    EVT_LEFT_DOWN(RoundedPanel::OnLeftDown)
+    EVT_SET_FOCUS(RoundedPanel::OnSetFocus)
 wxEND_EVENT_TABLE()

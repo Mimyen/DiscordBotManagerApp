@@ -445,6 +445,8 @@ void MainFrame::OnSize(wxSizeEvent& event)
     mainPanelHomeSubpanel->Resize(size, oldFrameSize);
     mainPanelMessageSubpanel->Resize(size, oldFrameSize);
     messageSubpanelInput->Resize(size, oldFrameSize);
+    messageSubpanelAuthorName->Resize(size, oldFrameSize);
+    messageSubpanelAuthorIcon->Resize(size, oldFrameSize);
     messageSubpanelSendButton->Resize(size, oldFrameSize);
     if (messageSubpanelChannels) messageSubpanelChannels->Resize(size, oldFrameSize);
     if (messageSubpanelServers) messageSubpanelServers->Resize(size, oldFrameSize);
@@ -478,6 +480,36 @@ void MainFrame::SetupMessageSubpanel()
     messageSubpanelInput->SetFont(labelFont);
     messageSubpanelInput->SetLabelFont(labelFont);
 
+    messageSubpanelAuthorName = new LabeledTextInputPanel(
+        mainPanelMessageSubpanel,
+        wxID_ANY,
+        "Author Name",
+        wxPoint(50, 300),
+        wxSize(300, 50),
+        wxTE_PROCESS_ENTER,
+        wxDefaultValidator,
+        "name",
+        messageSubpanelSendButton
+    );
+
+    messageSubpanelAuthorName->SetFont(labelFont);
+    messageSubpanelAuthorName->SetLabelFont(labelFont);
+
+    messageSubpanelAuthorIcon = new LabeledTextInputPanel(
+        mainPanelMessageSubpanel,
+        wxID_ANY,
+        "Author Icon",
+        wxPoint(400, 300),
+        wxSize(300, 50),
+        wxTE_PROCESS_ENTER,
+        wxDefaultValidator,
+        "name",
+        messageSubpanelSendButton
+    );
+
+    messageSubpanelAuthorIcon->SetFont(labelFont);
+    messageSubpanelAuthorIcon->SetLabelFont(labelFont);
+
     messageSubpanelSendButton = new RoundedButton(
         mainPanelMessageSubpanel, 
         "Send Message", 
@@ -490,6 +522,13 @@ void MainFrame::SetupMessageSubpanel()
                 data.emplace_back(m_serverId.ToStdString());
                 data.emplace_back(m_channelId.ToStdString());
                 data.emplace_back(messageSubpanelInput->GetValue());
+
+                if (messageSubpanelEmbedToggle->GetState()) {
+                    data.emplace_back("true");
+                    data.emplace_back("0");
+                    data.emplace_back("255");
+                    data.emplace_back("255");
+                }
 
                 std::vector<wxString> output = this->socketHandler->Handle(sendmessage, data);
 

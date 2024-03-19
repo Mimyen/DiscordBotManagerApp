@@ -48,6 +48,18 @@ protected:
     /// </summary>
     /// <param name="event">Event that is called.</param>
     virtual void OnSize(wxSizeEvent& event);
+
+    /// <summary>
+    /// Function that is run whenever mouse button is pressed whilst over the element.
+    /// </summary>
+    /// <param name="event">Event passed to the function.</param>
+    void OnLeftDown(wxMouseEvent& event);
+
+    /// <summary>
+    /// Function that is run whenever focus is set to the element.
+    /// </summary>
+    /// <param name="event">Event passed to the function.</param>
+    virtual void OnSetFocus(wxFocusEvent& event);
     
     wxColour bg;
     wxColour fg;

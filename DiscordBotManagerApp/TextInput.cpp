@@ -37,6 +37,7 @@ void TextInput::OnLeftDown(wxMouseEvent& event)
     wxRect rect = GetScreenRect();
     if (!rect.Contains(pos) && HasFocus())
     {
+        if (m_parent) m_parent->SetFocus();
         Disable();
         Enable();
     }
@@ -156,8 +157,6 @@ void TextInput::OnSetFocus(wxFocusEvent& event)
         SetValue(value);
         SetForegroundColour(fg);
     }
-    parent->Refresh();
-    //Refresh();
     event.Skip();
 }
 

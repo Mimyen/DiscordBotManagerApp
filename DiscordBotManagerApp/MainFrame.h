@@ -111,6 +111,8 @@ public:
     DropdownMenu* messageSubpanelChannels;
     RoundedButton* messageSubpanelSendButton;
     LabeledTextInputPanel* messageSubpanelInput;
+    LabeledTextInputPanel* messageSubpanelAuthorName;
+    LabeledTextInputPanel* messageSubpanelAuthorIcon;
     ToggleButton* messageSubpanelEmbedToggle;
     Label* messageSubpanelEmbedLabel;
     Label* messageSubpanelLabel;
