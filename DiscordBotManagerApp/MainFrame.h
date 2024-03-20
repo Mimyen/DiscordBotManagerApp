@@ -12,6 +12,7 @@
 #include "DropdownMenu.h"
 #include "Slider.h"
 #include "RoundedScrollPanel.h"
+#include "ColorPicker.h"
 
 #define BOT_IP L"127.0.0.1"
 #define BOT_PORT 2222
@@ -115,6 +116,7 @@ public:
     ToggleButton* messageSubpanelEmbedToggle;
     Label* messageSubpanelEmbedLabel;
     Label* messageSubpanelLabel;
+    ColorPicker* messageSubpanelEmbedColour;
 
     DECLARE_EVENT_TABLE();
 };

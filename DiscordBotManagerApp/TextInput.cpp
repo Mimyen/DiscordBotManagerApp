@@ -1,8 +1,8 @@
 #include "TextInput.h"
 
 TextInput::TextInput(wxWindow* parent, wxWindowID id, const wxString& value, const wxPoint& pos, const wxSize& size,
-    long style, Callback onTextChange, Callback onEnter)
-    : wxTextCtrl(parent, id, "", pos, size, style | wxBORDER_NONE), m_hasFocus(false), m_onTextChange(onTextChange), m_onEnter(onEnter)
+    long style, Callback onTextChange, Callback onEnter, Validator validator)
+    : wxTextCtrl(parent, id, "", pos, size, style | wxBORDER_NONE), m_hasFocus(false), m_onTextChange(onTextChange), m_onEnter(onEnter), m_validator(validator)
 {
     this->fg = wxColour(255, 255, 255);
     this->fgInactive = wxColour(114, 114, 114);
@@ -71,7 +71,9 @@ void TextInput::OnTextChange(wxCommandEvent& event)
     GetSelection(&start, &end);
 
     if (!m_isEncrypted) {
-        value = input;
+        if (m_validator) if (m_validator(input)) {
+            value = input;
+        }
         displayText = value;
     }
     else {
@@ -154,6 +156,8 @@ void TextInput::SetColors(wxColour fg, wxColour bg, wxColour fgInactive)
     this->fg = fg;
     this->fgInactive = fgInactive;
     this->bg = bg;
+    SetBackgroundColour(bg);
+    Refresh();
 }
 
 void TextInput::OnSetFocus(wxFocusEvent& event)

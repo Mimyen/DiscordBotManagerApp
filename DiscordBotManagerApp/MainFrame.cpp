@@ -477,6 +477,9 @@ void MainFrame::OnSize(wxSizeEvent& event)
     messageSubpanelAuthorName->Resize(size, oldFrameSize);
     messageSubpanelAuthorIcon->Resize(size, oldFrameSize);
     messageSubpanelSendButton->Resize(size, oldFrameSize);
+    messageSubpanelEmbedColour->Resize(size, oldFrameSize);
+    messageSubpanelEmbedToggle->Resize(size, oldFrameSize);
+    messageSubpanelEmbedLabel->Resize(size, oldFrameSize);
     if (messageSubpanelChannels) messageSubpanelChannels->Resize(size, oldFrameSize);
     if (messageSubpanelServers) messageSubpanelServers->Resize(size, oldFrameSize);
 
@@ -552,10 +555,11 @@ void MainFrame::SetupMessageSubpanel()
                 data.emplace_back(messageSubpanelInput->GetValue());
 
                 if (messageSubpanelEmbedToggle->GetState()) {
+                    std::vector<int> colors = messageSubpanelEmbedColour->GetRGB();
                     data.emplace_back("true");
-                    data.emplace_back("0");
-                    data.emplace_back("255");
-                    data.emplace_back("255");
+                    data.emplace_back(std::to_string(colors[0]));
+                    data.emplace_back(std::to_string(colors[1]));
+                    data.emplace_back(std::to_string(colors[2]));
                 }
 
                 std::vector<wxString> output = this->socketHandler->Handle(sendmessage, data);
@@ -606,6 +610,8 @@ void MainFrame::SetupMessageSubpanel()
     messageSubpanelLabel->SetForegroundColour(wxColour(255, 255, 255));
     messageSubpanelLabel->SetBackgroundColour(wxColour(18, 18, 18));
     messageSubpanelLabel->SetFont(titleFont);
+
+    messageSubpanelEmbedColour = new ColorPicker(mainPanelMessageSubpanel, wxPoint(600, 600), wxSize(20, 20));
 }
 
 void MainFrame::SetupHomeSubpanel()

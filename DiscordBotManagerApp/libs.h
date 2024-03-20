@@ -10,6 +10,7 @@
 #include <wx/bitmap.h>
 #include <wx/dcclient.h>
 #include <wx/dcmemory.h>
+#include <wx/dialog.h>
 #include <wx/popupwin.h>
 #include <wx/dcbuffer.h>
 #include <wx/msw/winundef.h>
@@ -27,6 +28,7 @@
 #include <thread>
 #include <chrono>
 #include <atomic>
+#include <cctype>
 
 #pragma comment(lib, "dwmapi.lib")
 #pragma comment(lib, "ws2_32.lib")

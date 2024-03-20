@@ -13,6 +13,7 @@ class LabeledTextInputPanel : public wxPanel
 {
 public:
     using Callback = std::function<void(wxString value)>;
+    using Validator = std::function<bool(wxString value)>;
 
     /// <summary>
     /// Constructor for LabaledTextInputPanel class.
@@ -32,8 +33,8 @@ public:
     /// <param name="outlineInactive">Color of the inactive outline.</param>
     LabeledTextInputPanel(wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& value = wxEmptyString,
         const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize,
-        long style = wxTE_PROCESS_ENTER,
-        Callback onTextChange = [](wxString value = "") {}, Callback onEnter = [](wxString value = "") {});
+        long style = wxTE_PROCESS_ENTER, Callback onTextChange = [](wxString value = "") {}, 
+        Callback onEnter = [](wxString value = "") {}, Validator validator = [](wxString value) { return true; });
 
     /// <summary>
     /// Resizes the window in relation to window size.
@@ -72,10 +73,10 @@ public:
     /// <param name="font">Font that will be set.</param>
     virtual void SetLabelFont(wxFont font);
 
-    virtual bool SetBackgroundColour(const wxColour& bg);
-    virtual bool SetForegroundColour(const wxColour& bg);
-    virtual bool SetOutlineColour(const wxColour& bg);
-    virtual bool SetInactiveOutlineColour(const wxColour& bg);
+    virtual bool SetBackgroundColour(const wxColour& colour);
+    virtual bool SetForegroundColour(const wxColour& colour);
+    virtual bool SetOutlineColour(const wxColour& colour);
+    virtual bool SetInactiveOutlineColour(const wxColour& colour);
 
     TextInput m_textInput;
 protected:

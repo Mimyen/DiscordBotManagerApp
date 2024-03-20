@@ -1,8 +1,8 @@
 #include "LabeledTextInputPanel.h"
 
 LabeledTextInputPanel::LabeledTextInputPanel(wxWindow* parent, wxWindowID id, const wxString& value, const wxPoint& pos, 
-    const wxSize& size, long style, Callback onTextChange, Callback onEnter)
-    : wxPanel(parent, id, pos, size, style), m_textInput(this, wxID_ANY, value, wxDefaultPosition, wxDefaultSize, style, onTextChange, onEnter),
+    const wxSize& size, long style, Callback onTextChange, Callback onEnter, Validator validator)
+    : wxPanel(parent, id, pos, size, style), m_textInput(this, wxID_ANY, value, wxDefaultPosition, wxDefaultSize, style, onTextChange, onEnter, validator),
     m_isEncrypted(false), m_isHovered(false), m_button(this, wxID_ANY, &m_textInput), m_label(this, wxID_ANY, value, wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER_HORIZONTAL),
     m_isEmpty(true), m_hoveredChild(false)
 {
@@ -26,7 +26,6 @@ LabeledTextInputPanel::LabeledTextInputPanel(wxWindow* parent, wxWindowID id, co
     m_label.Show(!m_isEmpty);
     m_label.SetBackgroundColour(bg);
     m_label.SetForegroundColour(fg);
-    SetBackgroundColour(bg);
 
     m_textInput.Bind(wxEVT_SET_FOCUS, &LabeledTextInputPanel::OnSetFocus, this);
     m_textInput.Bind(wxEVT_KILL_FOCUS, &LabeledTextInputPanel::OnKillFocus, this);
@@ -299,22 +298,51 @@ void LabeledTextInputPanel::SetLabelFont(wxFont font)
     Refresh();
 }
 
-bool LabeledTextInputPanel::SetBackgroundColour(const wxColour& bg)
+bool LabeledTextInputPanel::SetBackgroundColour(const wxColour& colour)
 {
-    return false;
+    try {
+        bg = colour;
+        m_textInput.SetColors(fg, bg, outlineInactive);
+        m_label.SetBackgroundColour(bg);
+        return true;
+    }
+    catch (std::exception e) {
+        return false;
+    }
 }
 
-bool LabeledTextInputPanel::SetForegroundColour(const wxColour& bg)
+bool LabeledTextInputPanel::SetForegroundColour(const wxColour& colour)
 {
-    return false;
+    try {
+        fg = colour;
+        m_textInput.SetColors(fg, bg, outlineInactive);
+        m_label.SetForegroundColour(fg);
+        return true;
+    }
+    catch (std::exception e) {
+        return false;
+    }
 }
 
-bool LabeledTextInputPanel::SetOutlineColour(const wxColour& bg)
+bool LabeledTextInputPanel::SetOutlineColour(const wxColour& colour)
 {
-    return false;
+    try {
+        outline = colour;
+        return true;
+    }
+    catch (std::exception e) {
+        return false;
+    }
 }
 
-bool LabeledTextInputPanel::SetInactiveOutlineColour(const wxColour& bg)
+bool LabeledTextInputPanel::SetInactiveOutlineColour(const wxColour& colour)
 {
-    return false;
+    try {
+        outlineInactive = colour;
+        m_textInput.SetColors(fg, bg, outlineInactive);
+        return true;
+    }
+    catch (std::exception e) {
+        return false;
+    }
 }
