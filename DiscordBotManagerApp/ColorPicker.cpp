@@ -18,6 +18,12 @@ void ColorPicker::Resize(wxSize windowSize, wxSize defaultWindowSize)
     int objectWidth = defaultPos.x * windowSize.x / defaultWindowSize.x;
     int objectHeight = defaultPos.y * windowSize.y / defaultWindowSize.y;
 
+    if (m_popup) {
+        m_popup->Destroy();
+        m_popup = nullptr;
+    }
+
+
     // Set the new position and size for the object
     SetSize(objectWidth, objectHeight, objectX, objectY);
 }
@@ -112,26 +118,24 @@ void ColorPicker::OnMouseLeftUp(wxMouseEvent& event)
         m_clicked = false;
         m_hold = false;
         Refresh();
-        m_popup = new ColorPickerPopup(
-            this, 
-            m_r, 
-            m_g, 
-            m_b, 
-            wxID_ANY, 
-            wxPoint(
-                wxGetTopLevelParent(this)->GetScreenPosition().x + wxGetTopLevelParent(this)->GetSize().x / 4,
-                wxGetTopLevelParent(this)->GetScreenPosition().y + wxGetTopLevelParent(this)->GetSize().y / 4
-            ), 
-            wxGetTopLevelParent(this)->GetSize() / 2, 
-            m_callback
-        );
-        m_popup->ShowModal();
-        LDC(m_popup->GetSize().x);
-        LDC(m_popup->GetSize().y);
-        LDC(m_popup->GetPosition().x);
-        LDC(m_popup->GetPosition().y);
-        m_popup->Refresh();
+        if (!m_popup) {
+            m_popup = new ColorPickerPopup(
+                this,
+                m_r,
+                m_g,
+                m_b,
+                wxID_ANY,
+                wxPoint(
+                    wxGetTopLevelParent(this)->GetScreenPosition().x + wxGetTopLevelParent(this)->GetSize().x / 4,
+                    wxGetTopLevelParent(this)->GetScreenPosition().y + wxGetTopLevelParent(this)->GetSize().y / 4
+                ),
+                wxGetTopLevelParent(this)->GetSize() / 2,
+                m_callback
+            );
+        }
+
         m_popup->Show();
+
         event.Skip();
     }
     else event.Skip();

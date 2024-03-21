@@ -3,6 +3,7 @@
 #include "libs.h"
 
 #define LDC(x) wxLogDebug(std::to_string(x).c_str())
+#define DUMMYRESIZE wxSize(1, 1), wxSize(1, 1)
 
 class Utils
 {

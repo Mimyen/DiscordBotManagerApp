@@ -1,6 +1,7 @@
 #pragma once
 
 #include "LabeledTextInputPanel.h"
+#include "SimpleRoundedButton.h"
 
 class ColorPickerPopup : public wxDialog
 {
@@ -21,6 +22,8 @@ private:
 	/// <param name="dc">Drawing component from wxWidgets.</param>
 	virtual void Render(wxDC& dc);
 
+	virtual void OnClose(wxCloseEvent& event);
+
 	unsigned int& m_r;
 	unsigned int& m_g;
 	unsigned int& m_b;
@@ -31,7 +34,8 @@ private:
 	wxString m_gInputLastValue;
 	LabeledTextInputPanel* m_bInput;
 	wxString m_bInputLastValue;
-
+	SimpleRoundedButton* m_close;
+	SimpleRoundedButton* m_ok;
 	Callback m_callback;
 
 	DECLARE_EVENT_TABLE()

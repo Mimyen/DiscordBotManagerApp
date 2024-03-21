@@ -151,6 +151,7 @@
     <ClCompile Include="ScrollButton.cpp" />
     <ClCompile Include="ScrollControl.cpp" />
     <ClCompile Include="ScrollPanel.cpp" />
+    <ClCompile Include="SimpleRoundedButton.cpp" />
     <ClCompile Include="Slider.cpp" />
     <ClCompile Include="SocketHandler.cpp" />
     <ClCompile Include="TextInput.cpp" />
@@ -178,6 +179,7 @@
     <ClInclude Include="ScrollButton.h" />
     <ClInclude Include="ScrollControl.h" />
     <ClInclude Include="ScrollPanel.h" />
+    <ClInclude Include="SimpleRoundedButton.h" />
     <ClInclude Include="Slider.h" />
     <ClInclude Include="SocketHandler.h" />
     <ClInclude Include="TextInput.h" />

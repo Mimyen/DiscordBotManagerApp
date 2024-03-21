@@ -184,8 +184,21 @@ ColorPickerPopup::ColorPickerPopup(wxWindow* parent, unsigned int& r, unsigned i
     );
 
     m_bInput->SetValue(std::to_string(m_b).c_str());
-    m_bInput->Resize(wxSize(1, 1), wxSize(1, 1));
+    m_bInput->Resize(DUMMYRESIZE);
     m_bInput->SetBackgroundColour(wxColour(40, 40, 40));
+
+    m_close = new SimpleRoundedButton(
+        this, "x",
+        wxPoint(size.x - size.y * 3 / 20, size.y * 3 / 80),
+        wxSize(size.y / 10, size.y / 10), 
+        [this]() {
+            Hide();
+        }
+    );
+
+    m_close->SetBackgroundColour(wxColour(40, 40, 40));
+    m_close->SetForegroundColour(wxColour(255, 255, 255));
+    m_close->Resize(DUMMYRESIZE);
 }
 
 void ColorPickerPopup::OnPaint(wxPaintEvent& event)
@@ -225,6 +238,12 @@ void ColorPickerPopup::Render(wxDC& dc)
     dc.DrawBitmap(finalBmp, 0, 0, true);
 }
 
-wxBEGIN_EVENT_TABLE(ColorPickerPopup, wxPopupWindow)
+void ColorPickerPopup::OnClose(wxCloseEvent& event)
+{
+    event.Skip();
+}
+
+wxBEGIN_EVENT_TABLE(ColorPickerPopup, wxDialog)
     EVT_PAINT(ColorPickerPopup::OnPaint)
+    EVT_CLOSE(ColorPickerPopup::OnClose)
 wxEND_EVENT_TABLE()
