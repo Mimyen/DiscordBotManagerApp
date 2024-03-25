@@ -15,6 +15,7 @@
 #include <wx/dcbuffer.h>
 #include <wx/msw/winundef.h>
 #include <wx/msw/wrapwin.h>
+#include <wx/webview.h>
 #include <Windows.h>
 #include <dwmapi.h>
 #include <winsock2.h>

@@ -3,7 +3,9 @@
 SocketHandler::SocketHandler(PCWSTR ip, unsigned int port)
     : token(""), m_ip(ip), m_port(port)
 {
-
+    nlohmann::json bufferMessage;
+    bufferMessage["a"] = u8"¿";
+    wxLogDebug(bufferMessage.dump().c_str());
 }
 
 std::string SocketHandler::Message(std::string message)
@@ -154,6 +156,7 @@ std::vector<wxString> SocketHandler::Handle(CALL callId, std::vector<std::string
         bufferMessage["guild_id"] = data[0];
         bufferMessage["channel_id"] = data[1];
         bufferMessage["input"] = data[2];
+        wxLogDebug(data[2].c_str());
 
         if (data.size() > 3) bufferMessage["embedded"] = data[3];
         if (data.size() > 4) {
@@ -166,7 +169,7 @@ std::vector<wxString> SocketHandler::Handle(CALL callId, std::vector<std::string
             bufferMessage["icon"] = data[8];
         }
 
-        message = bufferMessage.dump();
+        message = bufferMessage.dump(-1, 32, false, nlohmann::json::error_handler_t::replace);
         wxLogDebug(message.c_str());
 
         message = Message(message);

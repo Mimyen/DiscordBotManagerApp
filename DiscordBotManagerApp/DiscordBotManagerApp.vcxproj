@@ -143,6 +143,8 @@
     <ClCompile Include="LabeledTextInputPanel.cpp" />
     <ClCompile Include="MainFrame.cpp" />
     <ClCompile Include="MenuPopup.cpp" />
+    <ClCompile Include="MultilineTextInput.cpp" />
+    <ClCompile Include="MultilineTextInputPanel.cpp" />
     <ClCompile Include="RectangleObj.cpp" />
     <ClCompile Include="RoundedButton.cpp" />
     <ClCompile Include="RoundedItem.cpp" />
@@ -157,6 +159,7 @@
     <ClCompile Include="TextInput.cpp" />
     <ClCompile Include="TextInputSHButton.cpp" />
     <ClCompile Include="ToggleButton.cpp" />
+    <ClCompile Include="WebView.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ColorPicker.h" />
@@ -171,6 +174,8 @@
     <ClInclude Include="libs\json.hpp" />
     <ClInclude Include="MainFrame.h" />
     <ClInclude Include="MenuPopup.h" />
+    <ClInclude Include="MultilineTextInput.h" />
+    <ClInclude Include="MultilineTextInputPanel.h" />
     <ClInclude Include="RectangleObj.h" />
     <ClInclude Include="RoundedButton.h" />
     <ClInclude Include="RoundedItem.h" />
@@ -186,6 +191,7 @@
     <ClInclude Include="TextInputSHButton.h" />
     <ClInclude Include="ToggleButton.h" />
     <ClInclude Include="Utils.h" />
+    <ClInclude Include="WebView.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\icon\home.png" />

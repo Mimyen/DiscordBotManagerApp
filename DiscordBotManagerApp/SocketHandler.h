@@ -7,7 +7,8 @@ enum {
 	authorize = 0,
 	getservers = 1,
 	getchannels = 2,
-	sendmessage = 3
+	sendmessage = 3,
+	getusers = 4
 };
 
 #define CALL unsigned int

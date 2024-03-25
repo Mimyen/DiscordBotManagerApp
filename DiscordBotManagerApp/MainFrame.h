@@ -13,6 +13,8 @@
 #include "Slider.h"
 #include "RoundedScrollPanel.h"
 #include "ColorPicker.h"
+#include "MultilineTextInputPanel.h"
+#include "WebView.h"
 
 #define BOT_IP L"127.0.0.1"
 #define BOT_PORT 2222
@@ -100,7 +102,7 @@ public:
     RoundedPanel* mainPanelMessageSubpanel;
 
     // mainPanel->HomeSubpanel
-
+    WebView* homeSubpanelWebView;
 
     // mainPanel->MessageSubpanel
     std::vector<std::pair<wxString, wxString>> m_servers;
@@ -110,12 +112,15 @@ public:
     DropdownMenu* messageSubpanelServers;
     DropdownMenu* messageSubpanelChannels;
     RoundedButton* messageSubpanelSendButton;
-    LabeledTextInputPanel* messageSubpanelInput;
+    MultilineTextInputPanel* messageSubpanelInput;
     LabeledTextInputPanel* messageSubpanelAuthorName;
     LabeledTextInputPanel* messageSubpanelAuthorIcon;
     ToggleButton* messageSubpanelEmbedToggle;
+    ToggleButton* messageSubpanelAuthorToggle;
     Label* messageSubpanelEmbedLabel;
+    Label* messageSubpanelAuthorLabel;
     Label* messageSubpanelLabel;
+    Label* messageSubpanelEmbedColourLabel;
     ColorPicker* messageSubpanelEmbedColour;
 
     DECLARE_EVENT_TABLE();

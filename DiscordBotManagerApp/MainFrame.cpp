@@ -316,7 +316,7 @@ void MainFrame::SetupMainPanel()
             messageSubpanelServers = new DropdownMenu(
                 mainPanelMessageSubpanel, 
                 wxID_ANY, 
-                wxPoint(50, 50), 
+                wxPoint(20, 50), 
                 wxSize(300, 50), 
                 [this](wxString option) {
                     m_channelId = "";
@@ -331,7 +331,7 @@ void MainFrame::SetupMainPanel()
                                 messageSubpanelChannels = new DropdownMenu(
                                     mainPanelMessageSubpanel,
                                     wxID_ANY,
-                                    wxPoint(400, 50),
+                                    wxPoint(370, 50),
                                     wxSize(300, 50),
                                     [this](wxString option) {
                                         for (auto& channel : m_channels) {
@@ -343,6 +343,8 @@ void MainFrame::SetupMainPanel()
                                     },
                                     "Select Channel"
                                 );
+
+                                messageSubpanelChannels->Resize(DUMMYRESIZE);
                             }
 
                             std::vector<std::string> data;
@@ -375,11 +377,12 @@ void MainFrame::SetupMainPanel()
                 },
                 "Select Server"
             );
+            messageSubpanelServers->Resize(DUMMYRESIZE);
 
             messageSubpanelChannels = new DropdownMenu(
                 mainPanelMessageSubpanel,
                 wxID_ANY,
-                wxPoint(400, 50),
+                wxPoint(370, 50),
                 wxSize(300, 50),
                 [this](wxString option) {
                     for (auto& channel : m_channels) {
@@ -392,6 +395,7 @@ void MainFrame::SetupMainPanel()
                 },
                 "Select Channel"
             );
+            messageSubpanelChannels->Resize(DUMMYRESIZE);
 
             if (messageSubpanelChannels) messageSubpanelChannels->Resize(GetSize(), oldFrameSize);
             if (messageSubpanelServers) messageSubpanelServers->Resize(GetSize(), oldFrameSize);
@@ -476,10 +480,14 @@ void MainFrame::OnSize(wxSizeEvent& event)
     messageSubpanelInput->Resize(size, oldFrameSize);
     messageSubpanelAuthorName->Resize(size, oldFrameSize);
     messageSubpanelAuthorIcon->Resize(size, oldFrameSize);
+    messageSubpanelAuthorToggle->Resize(size, oldFrameSize);
+    messageSubpanelAuthorLabel->Resize(size, oldFrameSize);
     messageSubpanelSendButton->Resize(size, oldFrameSize);
     messageSubpanelEmbedColour->Resize(size, oldFrameSize);
     messageSubpanelEmbedToggle->Resize(size, oldFrameSize);
     messageSubpanelEmbedLabel->Resize(size, oldFrameSize);
+    messageSubpanelLabel->Resize(size, oldFrameSize);
+    messageSubpanelEmbedColourLabel->Resize(size, oldFrameSize);
     if (messageSubpanelChannels) messageSubpanelChannels->Resize(size, oldFrameSize);
     if (messageSubpanelServers) messageSubpanelServers->Resize(size, oldFrameSize);
 
@@ -497,15 +505,25 @@ void MainFrame::SetupMessageSubpanel()
     wxFont labelFont = light;
     labelFont.SetPointSize(12);
 
-    messageSubpanelInput = new LabeledTextInputPanel(
+    messageSubpanelInput = new MultilineTextInputPanel(
         mainPanelMessageSubpanel,
         wxID_ANY,
         "Message",
-        wxPoint(50, 200),
-        wxSize(300, 50),
-        wxTE_PROCESS_ENTER
+        wxPoint(20, 215),
+        wxSize(1150, 430),
+        1024L,
+        [this](wxString value) {
+
+        },
+        [this](wxString value) {
+
+        },
+        [this](wxString value) {
+            return true;
+        },
+        "Message that will be sent. If message format is embed it'll be description."
     );
-    mainPanelMessageSubpanel->AddChildWidget(messageSubpanelInput);
+
     messageSubpanelInput->SetFont(labelFont);
     messageSubpanelInput->SetLabelFont(labelFont);
 
@@ -513,12 +531,18 @@ void MainFrame::SetupMessageSubpanel()
         mainPanelMessageSubpanel,
         wxID_ANY,
         "Author Name",
-        wxPoint(50, 300),
+        wxPoint(20, 160),
         wxSize(300, 50),
-        wxTE_PROCESS_ENTER
+        wxTE_PROCESS_ENTER,
+        [](wxString value) {
+
+        },
+        [this](wxString value) {
+            messageSubpanelAuthorIcon->SetFocus();
+            messageSubpanelAuthorIcon->m_textInput.SetInsertionPointEnd();
+        }
     );
 
-    mainPanelMessageSubpanel->AddChildWidget(messageSubpanelAuthorName);
     messageSubpanelAuthorName->SetFont(labelFont);
     messageSubpanelAuthorName->SetLabelFont(labelFont);
 
@@ -526,26 +550,26 @@ void MainFrame::SetupMessageSubpanel()
         mainPanelMessageSubpanel,
         wxID_ANY,
         "Author Icon",
-        wxPoint(400, 300),
-        wxSize(300, 50),
+        wxPoint(370, 160),
+        wxSize(800, 50),
         wxTE_PROCESS_ENTER,
-        [this](wxString value) {
-            wxLogDebug(value);
+        [](wxString value) {
+
         },
         [this](wxString value) {
-            wxLogDebug(value);
+            messageSubpanelInput->SetFocus();
+            messageSubpanelInput->m_textInput.SetInsertionPointEnd();
         }
     );
 
-    mainPanelMessageSubpanel->AddChildWidget(messageSubpanelAuthorIcon);
     messageSubpanelAuthorIcon->SetFont(labelFont);
     messageSubpanelAuthorIcon->SetLabelFont(labelFont);
 
     messageSubpanelSendButton = new RoundedButton(
         mainPanelMessageSubpanel, 
         "Send Message", 
-        wxPoint(400, 500), 
-        wxSize(200, 50),
+        wxPoint(870, 53), 
+        wxSize(300, 50),
         [this]() {
             if (m_serverId != "" && m_channelId != "") {
                 std::vector<std::string> data;
@@ -561,6 +585,10 @@ void MainFrame::SetupMessageSubpanel()
                     data.emplace_back(std::to_string(colors[1]));
                     data.emplace_back(std::to_string(colors[2]));
                 }
+                if (messageSubpanelAuthorToggle->GetState()) {
+                    data.emplace_back(messageSubpanelAuthorName->GetValue());
+                    data.emplace_back(messageSubpanelAuthorIcon->GetValue());
+                }
 
                 std::vector<wxString> output = this->socketHandler->Handle(sendmessage, data);
 
@@ -570,25 +598,35 @@ void MainFrame::SetupMessageSubpanel()
                 else if (output[0] == wxString("true")) {
                     messageSubpanelInput->SetValue("");
                     messageSubpanelInput->Refresh();
+                    messageSubpanelAuthorIcon->SetValue("");
+                    messageSubpanelAuthorIcon->Refresh();
+                    messageSubpanelAuthorName->SetValue("");
+                    messageSubpanelAuthorName->Refresh();
                 }
             }
         }
     );
 
+    messageSubpanelSendButton->SetFont(labelFont);
+
     messageSubpanelEmbedToggle = new ToggleButton(
         mainPanelMessageSubpanel,
         wxID_ANY,
-        wxPoint(50, 120),
+        wxPoint(20, 120),
         wxSize(40, 20),
         [this](bool flag = true) {
-        
+            messageSubpanelAuthorToggle->Enable(flag);
+            messageSubpanelAuthorToggle->SetState(false);
+            messageSubpanelEmbedColour->Enable(flag);
+            messageSubpanelAuthorIcon->Enable(flag);
+            messageSubpanelAuthorName->Enable(flag);
         }
     );
     messageSubpanelEmbedLabel = new Label(
         mainPanelMessageSubpanel,
         wxID_ANY,
         "Embed Format",
-        wxPoint(95, 122),
+        wxPoint(65, 122),
         wxSize(110, 18)
     );
 
@@ -603,26 +641,61 @@ void MainFrame::SetupMessageSubpanel()
         mainPanelMessageSubpanel,
         wxID_ANY,
         "Send Message Function",
-        wxPoint(50, 10),
-        wxSize(110, 50)
+        wxPoint(20, 10),
+        wxSize(400, 50)
     );
 
     messageSubpanelLabel->SetForegroundColour(wxColour(255, 255, 255));
     messageSubpanelLabel->SetBackgroundColour(wxColour(18, 18, 18));
     messageSubpanelLabel->SetFont(titleFont);
 
-    messageSubpanelEmbedColour = new ColorPicker(mainPanelMessageSubpanel, wxPoint(600, 600), wxSize(20, 20));
+    messageSubpanelEmbedColour = new ColorPicker(mainPanelMessageSubpanel, wxPoint(370, 120), wxSize(20, 20));
+
+    messageSubpanelAuthorToggle = new ToggleButton(
+        mainPanelMessageSubpanel,
+        wxID_ANY,
+        wxPoint(180, 120),
+        wxSize(40, 20),
+        [this](bool flag = true) {
+            messageSubpanelAuthorIcon->Enable(flag);
+            messageSubpanelAuthorName->Enable(flag);
+        }
+    );
+
+    messageSubpanelAuthorLabel = new Label(
+        mainPanelMessageSubpanel,
+        wxID_ANY,
+        "Author",
+        wxPoint(225, 122),
+        wxSize(110, 18)
+    );
+
+    messageSubpanelAuthorLabel->SetForegroundColour(wxColour(255, 255, 255));
+    messageSubpanelAuthorLabel->SetBackgroundColour(wxColour(18, 18, 18));
+    messageSubpanelAuthorLabel->SetFont(labelFont);
+
+    messageSubpanelEmbedColourLabel = new Label(
+        mainPanelMessageSubpanel,
+        wxID_ANY,
+        "Colour",
+        wxPoint(395, 122),
+        wxSize(110, 18)
+    );
+
+    messageSubpanelEmbedColourLabel->SetForegroundColour(wxColour(255, 255, 255));
+    messageSubpanelEmbedColourLabel->SetBackgroundColour(wxColour(18, 18, 18));
+    messageSubpanelEmbedColourLabel->SetFont(labelFont);
+
+    messageSubpanelEmbedColour->Enable(false);
+    messageSubpanelAuthorToggle->Enable(false);
+    messageSubpanelAuthorIcon->Enable(false);
+    messageSubpanelAuthorName->Enable(false);
 }
 
 void MainFrame::SetupHomeSubpanel()
 {
-    RoundedButton* button = new RoundedButton(mainPanelHomeSubpanel, "Pawel kox", wxPoint(50, 50), wxSize(200, 50), 
-        [this]() { 
-            for (auto& server : m_servers) {
-                wxLogDebug(server.first + wxString(" ") + server.second);
-            }
-        }
-    );
+    homeSubpanelWebView = new WebView(mainPanelHomeSubpanel, wxID_ANY, wxPoint(10, 10), mainPanelHomeSubpanel->GetSize() - wxSize(20, 20), wxString::FromAscii("https://portfolio-page-judijudi6.vercel.app"));
+
 }
 
 

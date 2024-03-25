@@ -198,6 +198,8 @@ ColorPickerPopup::ColorPickerPopup(wxWindow* parent, unsigned int& r, unsigned i
 
     m_close->SetBackgroundColour(wxColour(40, 40, 40));
     m_close->SetForegroundColour(wxColour(255, 255, 255));
+    m_close->SetColour(wxColour(18, 18, 18));
+    m_close->SetPressedColour(wxColour(24, 24, 24));
     m_close->Resize(DUMMYRESIZE);
 }
 
